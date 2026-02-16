@@ -1,0 +1,10 @@
+const { Router } = require('express');
+const { auth } = require('../middlewares/auth');
+const validate = require('../middlewares/validate');
+const c = require('../controllers/reviewController');
+const router = Router();
+router.use(auth);
+router.post('/order/:orderId', c.createReviewValidation, validate, c.createReview);
+router.get('/my', c.getMyReviews);
+router.get('/user/:userId', c.getUserReviews);
+module.exports = router;

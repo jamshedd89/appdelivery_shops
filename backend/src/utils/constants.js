@@ -1,0 +1,28 @@
+module.exports = {
+  ROLES: { SELLER: 'seller', COURIER: 'courier' },
+  USER_STATUS: { PENDING: 'pending', ACTIVE: 'active', LIMITED: 'limited', BLOCKED: 'blocked' },
+  TRANSPORT: { FOOT: 'foot', BICYCLE: 'bicycle', MOTO: 'moto', CAR: 'car' },
+  ORDER_STATUS: {
+    CREATED: 'created', WAITING: 'waiting', ACCEPTED: 'accepted',
+    ON_WAY_SHOP: 'on_way_shop', AT_SHOP: 'at_shop', ON_WAY_CLIENT: 'on_way_client',
+    DELIVERED: 'delivered', CONFIRMED: 'confirmed', COMPLETED: 'completed',
+    CANCELLED_SELLER: 'cancelled_seller', CANCELLED_COURIER: 'cancelled_courier', EXPIRED: 'expired',
+  },
+  TRANSACTION_TYPE: {
+    DEPOSIT: 'deposit', WITHDRAWAL: 'withdrawal', FREEZE: 'freeze',
+    UNFREEZE: 'unfreeze', COMMISSION: 'commission', PAYMENT: 'payment',
+  },
+  MIN_DELIVERY_COST: 10,
+  MAX_ORDER_ITEMS: 10,
+  SERVICE_COMMISSION: 5,
+  COURIER_SEARCH_RADIUS_KM: 3,
+  DELIVERY_TIMER_MINUTES: 90,
+  CONFIRM_TIMER_MINUTES: 20,
+  NOTIFICATION_INTERVAL_MINUTES: 5,
+  CANCELLATION_PENALTY_PERCENT: 50,
+  INITIAL_COURIER_RATING_SCORE: 50,
+  MAX_COURIER_RATING_SCORE: 100,
+  DEFAULT_STAR_RATING: 5,
+  MIN_WITHDRAWAL: 50,
+  SMS_STUB_CODE: '1234',
+};

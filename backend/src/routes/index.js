@@ -1,0 +1,9 @@
+const { Router } = require('express');
+const router = Router();
+router.use('/auth', require('./auth'));
+router.use('/upload', require('./upload'));
+router.use('/orders', require('./orders'));
+router.use('/balance', require('./balance'));
+router.use('/reviews', require('./reviews'));
+router.use('/admin', require('./admin'));
+module.exports = router;

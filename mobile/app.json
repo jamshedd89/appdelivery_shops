@@ -1,0 +1,37 @@
+{
+  "expo": {
+    "name": "AppDelivery",
+    "slug": "appdelivery",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "backgroundColor": "#4A90D9"
+    },
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.appdelivery.mobile",
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "We need your location to find nearby orders and couriers",
+        "NSLocationAlwaysAndWhenInUseUsageDescription": "We need your location to track deliveries"
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#4A90D9"
+      },
+      "package": "com.appdelivery.mobile",
+      "permissions": [
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_BACKGROUND_LOCATION",
+        "CAMERA"
+      ]
+    },
+    "plugins": [
+      "expo-location",
+      "expo-image-picker",
+      "expo-secure-store"
+    ]
+  }
+}

@@ -1,0 +1,12 @@
+const { Router } = require('express');
+const { auth } = require('../middlewares/auth');
+const c = require('../controllers/adminController');
+const router = Router();
+router.use(auth);
+router.get('/dashboard', c.getDashboard);
+router.get('/users', c.getUsers);
+router.get('/users/:id', c.getUserById);
+router.put('/users/:id/status', c.updateUserStatus);
+router.get('/orders', c.getOrders);
+router.get('/transactions', c.getTransactions);
+module.exports = router;

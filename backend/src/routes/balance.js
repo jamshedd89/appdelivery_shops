@@ -1,0 +1,11 @@
+const { Router } = require('express');
+const { auth } = require('../middlewares/auth');
+const validate = require('../middlewares/validate');
+const c = require('../controllers/balanceController');
+const router = Router();
+router.use(auth);
+router.get('/', c.getBalance);
+router.post('/deposit', c.depositValidation, validate, c.deposit);
+router.post('/withdraw', c.withdrawValidation, validate, c.withdraw);
+router.get('/transactions', c.getTransactions);
+module.exports = router;
