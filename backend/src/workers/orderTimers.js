@@ -1,6 +1,7 @@
 const { Queue, Worker } = require('bullmq');
-const { Order, CourierProfile } = require('../models');
+const { Order, CourierProfile, User } = require('../models');
 const balanceService = require('../services/balanceService');
+const penaltyService = require('../services/penaltyService');
 const { ORDER_STATUS } = require('../utils/constants');
 
 const connection = { host: process.env.REDIS_HOST || 'localhost', port: process.env.REDIS_PORT || 6379, password: process.env.REDIS_PASSWORD || undefined };
@@ -19,9 +20,9 @@ new Worker('delivery-timer', async (job) => {
   if (order.timer_expires_at && new Date() >= new Date(order.timer_expires_at)) {
     await order.update({ status: ORDER_STATUS.EXPIRED });
     if (order.courier_id) {
-      const p = await CourierProfile.findOne({ where: { user_id: order.courier_id } });
-      if (p) { const lc = p.late_count + 1; await p.update({ late_count: lc, ...(lc % 3 === 0 ? { rating_score: Math.max(0, p.rating_score - 5) } : {}) }); }
+      await penaltyService.handleCourierLateDelivery(order.courier_id);
     }
+    console.log(`[Worker] Order #${order.id} expired — courier late`);
   }
 }, { connection });
 
@@ -30,7 +31,17 @@ new Worker('confirm-timer', async (job) => {
   if (!order || order.status !== ORDER_STATUS.DELIVERED) return;
   if (order.confirm_expires_at && new Date() >= new Date(order.confirm_expires_at)) {
     await order.update({ status: ORDER_STATUS.CONFIRMED });
-    await balanceService.completeOrderPayment(order.id);
+    // Transfer frozen funds to courier
+    if (order.courier_id) {
+      const seller = await User.findByPk(order.seller_id);
+      const courier = await User.findByPk(order.courier_id);
+      const deliveryCost = parseFloat(order.delivery_cost);
+      const commission = parseFloat(order.commission);
+      const totalFrozen = deliveryCost + commission;
+      await seller.update({ frozen_balance: Math.max(0, parseFloat(seller.frozen_balance) - totalFrozen) });
+      await courier.update({ balance: parseFloat(courier.balance) + deliveryCost });
+      await penaltyService.handleCourierDeliverySuccess(order.courier_id);
+    }
     console.log(`[Worker] Order #${order.id} auto-confirmed`);
   }
 }, { connection });

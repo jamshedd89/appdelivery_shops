@@ -1,5 +1,7 @@
 const { Order, OrderItem, User, SellerAddress, CourierProfile } = require('../models');
 const geoService = require('./geoService');
+const penaltyService = require('./penaltyService');
+const pushService = require('./pushService');
 const ApiError = require('../utils/ApiError');
 const { ORDER_STATUS, MIN_DELIVERY_COST, MAX_ORDER_ITEMS, SERVICE_COMMISSION, COURIER_SEARCH_RADIUS_KM } = require('../utils/constants');
 
@@ -18,6 +20,10 @@ class OrderService {
     await seller.update({ frozen_balance: parseFloat(seller.frozen_balance) + totalNeeded });
     await order.update({ status: ORDER_STATUS.WAITING });
     const nearbyCouriers = await geoService.findCouriersNearby(address.latitude, address.longitude, COURIER_SEARCH_RADIUS_KM);
+    // Notify nearby couriers
+    for (const c of nearbyCouriers) {
+      pushService.notifyNewOrder(c.courierId || c.id, order.id).catch(() => {});
+    }
     const fullOrder = await this._getFullOrder(order.id);
     return { order: fullOrder, nearbyCouriers };
   }
@@ -45,7 +51,11 @@ class OrderService {
     if (order.status !== ORDER_STATUS.WAITING) throw ApiError.badRequest('Order not available');
     const courier = await User.findByPk(courierId);
     if (courier.status !== 'active') throw ApiError.forbidden('Account not active');
+    if (await penaltyService.isCourierBlocked(courierId)) {
+      throw ApiError.forbidden('Account is temporarily blocked');
+    }
     await order.update({ courier_id: courierId, status: ORDER_STATUS.ACCEPTED });
+    pushService.notifyOrderAccepted(order.seller_id, orderId, `${courier.first_name}`).catch(() => {});
     return this._getFullOrder(orderId);
   }
 
@@ -59,6 +69,12 @@ class OrderService {
     if (newStatus === ORDER_STATUS.ON_WAY_CLIENT) updateData.timer_expires_at = new Date(Date.now() + 90 * 60 * 1000);
     if (newStatus === ORDER_STATUS.DELIVERED) updateData.confirm_expires_at = new Date(Date.now() + 20 * 60 * 1000);
     await order.update(updateData);
+    // Push notifications for status changes
+    if (newStatus === ORDER_STATUS.AT_SHOP) {
+      pushService.notifyCourierArrived(order.seller_id, orderId).catch(() => {});
+    } else if (newStatus === ORDER_STATUS.DELIVERED) {
+      pushService.notifyOrderDelivered(order.seller_id, orderId).catch(() => {});
+    }
     return this._getFullOrder(orderId);
   }
 
@@ -67,7 +83,17 @@ class OrderService {
     if (!order) throw ApiError.notFound('Order not found');
     if (order.seller_id !== sellerId) throw ApiError.forbidden('Not your order');
     if (!['created', 'waiting', 'accepted', 'on_way_shop', 'at_shop'].includes(order.status)) throw ApiError.badRequest('Cannot cancel in current status');
+
+    // If courier already arrived (at_shop), seller pays 50% penalty
+    if (['at_shop', 'on_way_shop'].includes(order.status) && order.courier_id) {
+      await penaltyService.handleSellerCancelAfterArrival(order);
+    }
+
     await order.update({ status: ORDER_STATUS.CANCELLED_SELLER, cancel_reason: reason });
+    await penaltyService.handleSellerCancelPenalty(sellerId);
+    if (order.courier_id) {
+      pushService.notifyOrderCancelled(order.courier_id, orderId, reason).catch(() => {});
+    }
     return this._getFullOrder(orderId);
   }
 
@@ -77,6 +103,7 @@ class OrderService {
     if (order.courier_id !== courierId) throw ApiError.forbidden('Not your order');
     if (!['accepted', 'on_way_shop'].includes(order.status)) throw ApiError.badRequest('Cannot cancel in current status');
     await order.update({ status: ORDER_STATUS.WAITING, cancel_reason: reason, courier_id: null });
+    await penaltyService.handleCourierCancel(courierId);
     return this._getFullOrder(orderId);
   }
 
@@ -86,6 +113,19 @@ class OrderService {
     if (order.seller_id !== sellerId) throw ApiError.forbidden('Not your order');
     if (order.status !== ORDER_STATUS.DELIVERED) throw ApiError.badRequest('Not delivered yet');
     await order.update({ status: ORDER_STATUS.CONFIRMED });
+
+    // Transfer frozen funds to courier
+    if (order.courier_id) {
+      const seller = await User.findByPk(order.seller_id);
+      const courier = await User.findByPk(order.courier_id);
+      const deliveryCost = parseFloat(order.delivery_cost);
+      const commission = parseFloat(order.commission);
+      const totalFrozen = deliveryCost + commission;
+      const courierPayout = deliveryCost;
+      await seller.update({ frozen_balance: Math.max(0, parseFloat(seller.frozen_balance) - totalFrozen) });
+      await courier.update({ balance: parseFloat(courier.balance) + courierPayout });
+      await penaltyService.handleCourierDeliverySuccess(order.courier_id);
+    }
     return this._getFullOrder(orderId);
   }
 

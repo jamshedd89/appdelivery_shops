@@ -1,4 +1,4 @@
-const { User, SellerProfile, CourierProfile, SellerAddress, Order, OrderItem, Transaction } = require('../models');
+const { User, SellerProfile, CourierProfile, SellerAddress, Order, OrderItem, Transaction, Message } = require('../models');
 const { Op } = require('sequelize');
 const ApiError = require('../utils/ApiError');
 
@@ -54,16 +54,45 @@ async function getTransactions(req, res, next) {
   } catch (e) { next(e); }
 }
 
-async function getDashboard(req, res, next) {
+async function getOrderById(req, res, next) {
   try {
-    const [totalUsers, totalSellers, totalCouriers, pendingCouriers, totalOrders, activeOrders, completedOrders] = await Promise.all([
-      User.count(), User.count({ where: { role: 'seller' } }), User.count({ where: { role: 'courier' } }),
-      User.count({ where: { role: 'courier', status: 'pending' } }), Order.count(),
-      Order.count({ where: { status: { [Op.notIn]: ['completed', 'cancelled_seller', 'cancelled_courier', 'expired'] } } }),
-      Order.count({ where: { status: 'completed' } }),
-    ]);
-    res.json({ success: true, data: { totalUsers, totalSellers, totalCouriers, pendingCouriers, totalOrders, activeOrders, completedOrders } });
+    const order = await Order.findByPk(req.params.id, {
+      include: [
+        { model: OrderItem, as: 'items' },
+        { model: SellerAddress, as: 'sellerAddress' },
+        { model: User, as: 'seller', attributes: ['id', 'first_name', 'last_name', 'phone', 'rating'] },
+        { model: User, as: 'courier', attributes: ['id', 'first_name', 'last_name', 'phone', 'rating'], include: [{ model: CourierProfile, as: 'courierProfile', attributes: ['transport_type', 'rating_score'] }] },
+      ],
+    });
+    if (!order) throw ApiError.notFound('Order not found');
+    res.json({ success: true, data: order });
   } catch (e) { next(e); }
 }
 
-module.exports = { getUsers, getUserById, updateUserStatus, getOrders, getTransactions, getDashboard };
+async function getOrderMessages(req, res, next) {
+  try {
+    const messages = await Message.findAll({
+      where: { order_id: req.params.id },
+      include: [{ model: User, as: 'sender', attributes: ['id', 'first_name', 'last_name', 'role'] }],
+      order: [['created_at', 'ASC']],
+    });
+    res.json({ success: true, data: messages });
+  } catch (e) { next(e); }
+}
+
+async function getDashboard(req, res, next) {
+  try {
+    const sequelize = require('../config/database');
+    const [totalUsers, totalSellers, totalCouriers, pendingCouriers, totalOrders, activeOrders, completedOrders, totalRevenue, blockedUsers] = await Promise.all([
+      User.count(), User.count({ where: { role: 'seller' } }), User.count({ where: { role: 'courier' } }),
+      User.count({ where: { role: 'courier', status: 'pending' } }), Order.count(),
+      Order.count({ where: { status: { [Op.notIn]: ['completed', 'confirmed', 'cancelled_seller', 'cancelled_courier', 'expired'] } } }),
+      Order.count({ where: { status: { [Op.in]: ['completed', 'confirmed'] } } }),
+      Transaction.sum('amount', { where: { type: 'commission' } }).then(v => Math.abs(v || 0)),
+      User.count({ where: { status: 'blocked' } }),
+    ]);
+    res.json({ success: true, data: { totalUsers, totalSellers, totalCouriers, pendingCouriers, totalOrders, activeOrders, completedOrders, totalRevenue, blockedUsers } });
+  } catch (e) { next(e); }
+}
+
+module.exports = { getUsers, getUserById, updateUserStatus, getOrders, getOrderById, getOrderMessages, getTransactions, getDashboard };

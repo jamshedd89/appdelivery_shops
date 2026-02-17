@@ -26,6 +26,18 @@ function initSocket(server) {
     socket.on('courier:offline', async () => { if (socket.userRole === 'courier') await geoService.removeCourier(socket.userId); });
     socket.on('order:join', (id) => socket.join(`order:${id}`));
     socket.on('order:leave', (id) => socket.leave(`order:${id}`));
+
+    // Chat events
+    socket.on('chat:typing', ({ orderId }) => {
+      socket.to(`order:${orderId}`).emit('chat:typing', { userId: socket.userId, orderId });
+    });
+    socket.on('chat:stop_typing', ({ orderId }) => {
+      socket.to(`order:${orderId}`).emit('chat:stop_typing', { userId: socket.userId, orderId });
+    });
+    socket.on('chat:read', ({ orderId }) => {
+      socket.to(`order:${orderId}`).emit('chat:read', { userId: socket.userId, orderId });
+    });
+
     socket.on('disconnect', async () => { if (socket.userRole === 'courier') await geoService.removeCourier(socket.userId); });
   });
 

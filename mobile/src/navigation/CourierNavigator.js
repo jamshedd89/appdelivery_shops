@@ -8,6 +8,7 @@ import CourierHomeScreen from '../screens/courier/CourierHomeScreen';
 import CourierOrdersScreen from '../screens/courier/CourierOrdersScreen';
 import OrderDetailScreen from '../screens/shared/OrderDetailScreen';
 import ProfileScreen from '../screens/shared/ProfileScreen';
+import ChatScreen from '../screens/shared/ChatScreen';
 import { COLORS, SHADOWS } from '../utils/constants';
 
 const Tab = createBottomTabNavigator();
@@ -27,6 +28,7 @@ function AvailableStack() {
     <Stack.Navigator screenOptions={stackOptions}>
       <Stack.Screen name="CourierHome" component={CourierHomeScreen} options={{ headerShown: false }} />
       <Stack.Screen name="OrderDetail" component={OrderDetailScreen} options={{ title: 'Детали заказа' }} />
+      <Stack.Screen name="Chat" component={ChatScreen} options={{ headerShown: false }} />
     </Stack.Navigator>
   );
 }
@@ -36,6 +38,7 @@ function MyOrdersStack() {
     <Stack.Navigator screenOptions={stackOptions}>
       <Stack.Screen name="CourierOrdersList" component={CourierOrdersScreen} options={{ headerShown: false }} />
       <Stack.Screen name="OrderDetail" component={OrderDetailScreen} options={{ title: 'Детали заказа' }} />
+      <Stack.Screen name="Chat" component={ChatScreen} options={{ headerShown: false }} />
     </Stack.Navigator>
   );
 }

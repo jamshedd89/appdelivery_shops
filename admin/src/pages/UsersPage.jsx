@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { adminApi } from '../services/api';
 
 const STATUS_COLORS = {
@@ -15,6 +16,7 @@ const STATUS_LABELS = {
 };
 
 export default function UsersPage() {
+  const nav = useNavigate();
   const [users, setUsers] = useState([]);
   const [total, setTotal] = useState(0);
   const [filters, setFilters] = useState({ role: '', status: '', search: '' });
@@ -48,7 +50,7 @@ export default function UsersPage() {
     }
   };
 
-  const headers = ['ID', 'Имя', 'Телефон', 'Роль', 'Рейтинг', 'Баланс', 'Статус', 'Действия'];
+  const headers = ['ID', 'Имя', 'Телефон', 'Роль', 'Рейтинг', 'Баланс', 'Штрафы', 'Статус', 'Действия'];
 
   return (
     <div className="p-8">
@@ -99,9 +101,9 @@ export default function UsersPage() {
           </thead>
           <tbody>
             {users.map((u) => (
-              <tr key={u.id} className="border-b border-gray-100 hover:bg-gray-50/50 transition-colors">
+              <tr key={u.id} className="border-b border-gray-100 hover:bg-gray-50/50 transition-colors cursor-pointer" onClick={() => nav(`/users/${u.id}`)}>
                 <td className="table-cell">{u.id}</td>
-                <td className="table-cell font-medium">{u.first_name} {u.last_name}</td>
+                <td className="table-cell font-medium text-primary-500 hover:underline">{u.first_name} {u.last_name}</td>
                 <td className="table-cell text-gray-500">{u.phone}</td>
                 <td className="table-cell">
                   <span className={`badge ${u.role === 'courier' ? 'bg-blue-100 text-blue-700' : 'bg-purple-100 text-purple-700'}`}>
@@ -110,6 +112,19 @@ export default function UsersPage() {
                 </td>
                 <td className="table-cell">{u.rating?.toFixed(1)}</td>
                 <td className="table-cell font-medium">{parseFloat(u.balance).toFixed(2)}</td>
+                <td className="table-cell text-xs">
+                  {u.role === 'courier' && u.courierProfile ? (
+                    <div className="space-y-0.5">
+                      <div>Счёт: <span className="font-semibold">{u.courierProfile.rating_score}</span></div>
+                      <div>Опоздания: <span className={`font-semibold ${u.courierProfile.late_count >= 3 ? 'text-red-600' : ''}`}>{u.courierProfile.late_count}</span></div>
+                      <div>Отмены: <span className={`font-semibold ${u.courierProfile.consecutive_cancels >= 3 ? 'text-red-600' : ''}`}>{u.courierProfile.cancel_count} ({u.courierProfile.consecutive_cancels})</span></div>
+                    </div>
+                  ) : u.role === 'seller' && u.extra_commission_rate > 0 ? (
+                    <span className="badge bg-red-100 text-red-700">+{(u.extra_commission_rate * 100).toFixed(0)}% ком.</span>
+                  ) : (
+                    <span className="text-gray-300">—</span>
+                  )}
+                </td>
                 <td className="table-cell">
                   <span className={`badge ${STATUS_COLORS[u.status] || 'bg-gray-100 text-gray-600'}`}>
                     {STATUS_LABELS[u.status]}

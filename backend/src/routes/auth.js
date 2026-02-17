@@ -11,5 +11,6 @@ router.post('/register/courier', c.registerCourierValidation, validate, c.regist
 router.post('/login', c.loginValidation, validate, c.login);
 router.post('/refresh', c.refreshValidation, validate, c.refresh);
 router.get('/profile', auth, c.getProfile);
+router.post('/push-token', auth, c.updatePushToken);
 
 module.exports = router;

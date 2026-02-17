@@ -29,6 +29,7 @@ export const authApi = {
   registerCourier: (data) => api.post('/auth/register/courier', data),
   login: (phone, password) => api.post('/auth/login', { phone, password }),
   getProfile: () => api.get('/auth/profile'),
+  updatePushToken: (token) => api.post('/auth/push-token', { token }),
 };
 
 export const ordersApi = {
@@ -55,6 +56,12 @@ export const reviewsApi = {
   create: (orderId, data) => api.post(`/reviews/order/${orderId}`, data),
   getMy: () => api.get('/reviews/my'),
   getForUser: (userId) => api.get(`/reviews/user/${userId}`),
+};
+
+export const chatApi = {
+  getMessages: (orderId) => api.get(`/chat/${orderId}/messages`),
+  sendMessage: (orderId, data) => api.post(`/chat/${orderId}/messages`, data),
+  getUnread: (orderId) => api.get(`/chat/${orderId}/unread`),
 };
 
 export default api;

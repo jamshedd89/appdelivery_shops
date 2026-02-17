@@ -22,6 +22,7 @@ export default function RegisterCourierScreen() {
     if (!f.phone || !f.password || !f.first_name || !f.last_name || !f.birth_date || !f.inn) {
       Alert.alert('Ошибка', 'Заполните все поля'); return;
     }
+    if (!/^\d{9}$/.test(f.phone)) { Alert.alert('Ошибка', 'Номер телефона — 9 цифр'); return; }
     setLoading(true);
     try { await registerCourier(f); }
     catch (e) { Alert.alert('Ошибка', e.response?.data?.message || 'Ошибка'); }
@@ -38,7 +39,7 @@ export default function RegisterCourierScreen() {
           <Text style={styles.section}>Личные данные</Text>
           <Input label="Имя" leftIcon="person-outline" value={f.first_name} onChangeText={(v) => u('first_name', v)} />
           <Input label="Фамилия" leftIcon="person-outline" value={f.last_name} onChangeText={(v) => u('last_name', v)} />
-          <Input label="Телефон" leftIcon="call-outline" keyboardType="phone-pad" value={f.phone} onChangeText={(v) => u('phone', v)} />
+          <Input label="Телефон" leftIcon="call-outline" keyboardType="number-pad" placeholder="955555555" maxLength={9} value={f.phone} onChangeText={(v) => u('phone', v.replace(/[^0-9]/g, '').slice(0, 9))} />
           <Input label="Пароль" leftIcon="lock-closed-outline" secureTextEntry value={f.password} onChangeText={(v) => u('password', v)} />
           <Input label="Дата рождения" leftIcon="calendar-outline" placeholder="1990-01-15" value={f.birth_date} onChangeText={(v) => u('birth_date', v)} />
           <Input label="ИНН" leftIcon="document-text-outline" keyboardType="numeric" value={f.inn} onChangeText={(v) => u('inn', v)} />

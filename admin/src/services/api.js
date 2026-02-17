@@ -9,6 +9,8 @@ export const adminApi = {
   getUserById: (id) => api.get(`/admin/users/${id}`),
   updateUserStatus: (id, status) => api.put(`/admin/users/${id}/status`, { status }),
   getOrders: (p) => api.get('/admin/orders', { params: p }),
+  getOrderById: (id) => api.get(`/admin/orders/${id}`),
+  getOrderMessages: (id) => api.get(`/admin/orders/${id}/messages`),
   getTransactions: (p) => api.get('/admin/transactions', { params: p }),
 };
 export default api;

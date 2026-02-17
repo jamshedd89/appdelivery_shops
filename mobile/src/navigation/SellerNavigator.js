@@ -9,6 +9,7 @@ import CreateOrderScreen from '../screens/seller/CreateOrderScreen';
 import OrderDetailScreen from '../screens/shared/OrderDetailScreen';
 import ProfileScreen from '../screens/shared/ProfileScreen';
 import AddressPickerScreen from '../screens/shared/AddressPickerScreen';
+import ChatScreen from '../screens/shared/ChatScreen';
 import { COLORS, SHADOWS } from '../utils/constants';
 
 const Tab = createBottomTabNavigator();
@@ -30,6 +31,7 @@ function OrdersStack() {
       <Stack.Screen name="CreateOrder" component={CreateOrderScreen} options={{ title: 'Новая заявка' }} />
       <Stack.Screen name="OrderDetail" component={OrderDetailScreen} options={{ title: 'Детали заказа' }} />
       <Stack.Screen name="AddressPicker" component={AddressPickerScreen} options={{ title: 'Выбор адреса', headerTransparent: true, headerTintColor: COLORS.text }} />
+      <Stack.Screen name="Chat" component={ChatScreen} options={{ headerShown: false }} />
     </Stack.Navigator>
   );
 }

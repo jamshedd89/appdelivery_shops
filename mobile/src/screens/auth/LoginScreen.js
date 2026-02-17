@@ -16,6 +16,7 @@ export default function LoginScreen({ navigation, route }) {
 
   const handleLogin = async () => {
     if (!phone || !password) { Alert.alert('Ошибка', 'Заполните все поля'); return; }
+    if (!/^\d{9}$/.test(phone)) { Alert.alert('Ошибка', 'Номер телефона — 9 цифр'); return; }
     setLoading(true);
     try {
       await login(phone, password);
@@ -51,11 +52,12 @@ export default function LoginScreen({ navigation, route }) {
         <View style={styles.form}>
           <Input
             label="Телефон"
-            placeholder="+992 900 000 001"
-            keyboardType="phone-pad"
+            placeholder="985999999"
+            keyboardType="number-pad"
             leftIcon="call-outline"
             value={phone}
-            onChangeText={setPhone}
+            onChangeText={(v) => setPhone(v.replace(/[^0-9]/g, '').slice(0, 9))}
+            maxLength={9}
           />
           <Input
             label="Пароль"

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { adminApi } from '../services/api';
 
 const STATUS_LABELS = {
@@ -24,6 +25,7 @@ const STATUS_COLORS = {
 };
 
 export default function OrdersPage() {
+  const nav = useNavigate();
   const [orders, setOrders] = useState([]);
   const [total, setTotal] = useState(0);
   const [statusFilter, setStatusFilter] = useState('');
@@ -80,8 +82,8 @@ export default function OrdersPage() {
           </thead>
           <tbody>
             {orders.map((o) => (
-              <tr key={o.id} className="border-b border-gray-100 hover:bg-gray-50/50 transition-colors">
-                <td className="table-cell font-medium">#{o.id}</td>
+              <tr key={o.id} className="border-b border-gray-100 hover:bg-gray-50/50 transition-colors cursor-pointer" onClick={() => nav(`/orders/${o.id}`)}>
+                <td className="table-cell font-medium text-primary-500">#{o.id}</td>
                 <td className="table-cell">
                   {o.seller ? `${o.seller.first_name} ${o.seller.last_name}` : '—'}
                 </td>

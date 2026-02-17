@@ -13,6 +13,9 @@ const User = sequelize.define('User', {
   balance: { type: DataTypes.DECIMAL(12, 2), allowNull: false, defaultValue: 0 },
   frozen_balance: { type: DataTypes.DECIMAL(12, 2), allowNull: false, defaultValue: 0 },
   rating: { type: DataTypes.FLOAT, allowNull: false, defaultValue: 5.0 },
+  blocked_until: { type: DataTypes.DATE, allowNull: true },
+  extra_commission_rate: { type: DataTypes.FLOAT, allowNull: false, defaultValue: 0 },
+  push_token: { type: DataTypes.STRING(255), allowNull: true },
 }, { tableName: 'users' });
 
 module.exports = User;

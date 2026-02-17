@@ -8,5 +8,7 @@ router.get('/users', c.getUsers);
 router.get('/users/:id', c.getUserById);
 router.put('/users/:id/status', c.updateUserStatus);
 router.get('/orders', c.getOrders);
+router.get('/orders/:id', c.getOrderById);
+router.get('/orders/:id/messages', c.getOrderMessages);
 router.get('/transactions', c.getTransactions);
 module.exports = router;

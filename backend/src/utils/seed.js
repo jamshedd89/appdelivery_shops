@@ -34,7 +34,7 @@ async function seed() {
     console.log('Creating sellers...');
 
     const seller1 = await User.create({
-      phone: '+992900000001',
+      phone: '985999999',
       password_hash: hash,
       role: 'seller',
       first_name: 'Фирдавс',
@@ -61,7 +61,7 @@ async function seed() {
     });
 
     const seller2 = await User.create({
-      phone: '+992900000002',
+      phone: '988888888',
       password_hash: hash,
       role: 'seller',
       first_name: 'Мадина',
@@ -81,7 +81,7 @@ async function seed() {
     });
 
     const seller3 = await User.create({
-      phone: '+992900000003',
+      phone: '933333333',
       password_hash: hash,
       role: 'seller',
       first_name: 'Сорбон',
@@ -108,7 +108,7 @@ async function seed() {
     console.log('Creating couriers...');
 
     const courier1 = await User.create({
-      phone: '+992900000010',
+      phone: '955555555',
       password_hash: hash,
       role: 'courier',
       first_name: 'Далер',
@@ -131,7 +131,7 @@ async function seed() {
     });
 
     const courier2 = await User.create({
-      phone: '+992900000011',
+      phone: '977777777',
       password_hash: hash,
       role: 'courier',
       first_name: 'Рустам',
@@ -154,7 +154,7 @@ async function seed() {
     });
 
     const courier3 = await User.create({
-      phone: '+992900000012',
+      phone: '900000000',
       password_hash: hash,
       role: 'courier',
       first_name: 'Шахноза',
@@ -177,7 +177,7 @@ async function seed() {
     });
 
     const courier4 = await User.create({
-      phone: '+992900000013',
+      phone: '999999999',
       password_hash: hash,
       role: 'courier',
       first_name: 'Бахром',
@@ -200,7 +200,7 @@ async function seed() {
     });
 
     const courier5 = await User.create({
-      phone: '+992900000014',
+      phone: '985555555',
       password_hash: hash,
       role: 'courier',
       first_name: 'Камол',
@@ -432,16 +432,16 @@ async function seed() {
     console.log('\nТестовые аккаунты (пароль для всех: 123456):');
     console.log('');
     console.log('  ПРОДАВЦЫ:');
-    console.log('  +992900000001  Фирдавс Каримов    (баланс: 5000, рейтинг: 4.8)');
-    console.log('  +992900000002  Мадина Рахимова     (баланс: 12500, рейтинг: 4.9)');
-    console.log('  +992900000003  Сорбон Назаров      (баланс: 800, рейтинг: 4.5)');
+    console.log('  985999999  Фирдавс Каримов    (баланс: 5000, рейтинг: 4.8)');
+    console.log('  988888888  Мадина Рахимова     (баланс: 12500, рейтинг: 4.9)');
+    console.log('  933333333  Сорбон Назаров      (баланс: 800, рейтинг: 4.5)');
     console.log('');
     console.log('  КУРЬЕРЫ:');
-    console.log('  +992900000010  Далер Шарипов       (active, car, рейтинг: 4.7)');
-    console.log('  +992900000011  Рустам Холов        (active, moto, рейтинг: 4.3)');
-    console.log('  +992900000012  Шахноза Мирзоева    (active, bicycle, рейтинг: 5.0)');
-    console.log('  +992900000013  Бахром Саидов       (pending — ждёт модерации)');
-    console.log('  +992900000014  Камол Зоиров        (blocked, рейтинг: 2.1)');
+    console.log('  955555555  Далер Шарипов       (active, car, рейтинг: 4.7)');
+    console.log('  977777777  Рустам Холов        (active, moto, рейтинг: 4.3)');
+    console.log('  900000000  Шахноза Мирзоева    (active, bicycle, рейтинг: 5.0)');
+    console.log('  999999999  Бахром Саидов       (pending — ждёт модерации)');
+    console.log('  985555555  Камол Зоиров        (blocked, рейтинг: 2.1)');
     console.log('');
     console.log('  ЗАКАЗЫ: 10 шт (completed: 2, active: 4, cancelled: 1, expired: 1, waiting: 1, created: 1)');
     console.log('  ТРАНЗАКЦИИ: 18 шт');

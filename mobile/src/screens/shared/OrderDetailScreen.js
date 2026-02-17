@@ -5,10 +5,13 @@ import { LinearGradient } from 'expo-linear-gradient';
 import MapView, { Marker, Polyline } from 'react-native-maps';
 import Button from '../../components/Button';
 import StarRating from '../../components/StarRating';
+import CancelReasonModal from '../../components/CancelReasonModal';
 import useAuthStore from '../../store/authStore';
 import useOrderStore from '../../store/orderStore';
 import { ordersApi, reviewsApi } from '../../services/api';
-import { COLORS, SHADOWS, ORDER_STATUS_LABELS, ORDER_STATUS, TRANSPORT_LABELS, TRANSPORT_ICONS } from '../../utils/constants';
+import { COLORS, SHADOWS, ORDER_STATUS_LABELS, ORDER_STATUS, TRANSPORT_LABELS, TRANSPORT_ICONS, SOCKET_URL } from '../../utils/constants';
+import io from 'socket.io-client';
+import * as SecureStore from 'expo-secure-store';
 
 const STATUS_THEME = {
   completed: { bg: COLORS.successLight, color: COLORS.success, icon: 'checkmark-circle', gradient: COLORS.gradient.success },
@@ -25,13 +28,16 @@ const STATUS_THEME = {
   on_way_client: { bg: '#DBEAFE', color: '#3B82F6', icon: 'bicycle', gradient: COLORS.gradient.primary },
 };
 
-export default function OrderDetailScreen({ route }) {
+export default function OrderDetailScreen({ route, navigation }) {
   const { orderId } = route.params;
   const user = useAuthStore((s) => s.user);
   const { updateOrderStatus, confirmDelivery, cancelBySeller } = useOrderStore();
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(true);
   const [stars, setStars] = useState(0);
+  const [cancelModalVisible, setCancelModalVisible] = useState(false);
+  const [courierLocation, setCourierLocation] = useState(null);
+  const socketRef = useRef(null);
 
   const load = async () => {
     try { const { data } = await ordersApi.getById(orderId); setOrder(data.data); }
@@ -40,6 +46,37 @@ export default function OrderDetailScreen({ route }) {
   };
 
   useEffect(() => { load(); }, [orderId]);
+
+  // Real-time courier tracking
+  useEffect(() => {
+    const isActiveOrder = ['accepted', 'on_way_shop', 'at_shop', 'on_way_client', 'delivered'].includes(order?.status);
+    if (!isActiveOrder || !order?.courier_id) return;
+
+    const connectTracker = async () => {
+      const token = await SecureStore.getItemAsync('accessToken');
+      const socket = io(`${SOCKET_URL}/orders`, { auth: { token }, transports: ['websocket'] });
+      socketRef.current = socket;
+      socket.on('connect', () => {
+        socket.emit('order:join', order.id);
+      });
+      socket.on('courier:location:update', (data) => {
+        if (data.courierId === order.courier_id) {
+          setCourierLocation({ latitude: data.latitude, longitude: data.longitude });
+        }
+      });
+    };
+    connectTracker();
+
+    return () => {
+      if (socketRef.current) {
+        socketRef.current.emit('order:leave', order.id);
+        socketRef.current.disconnect();
+      }
+    };
+  }, [order?.status, order?.courier_id]);
+
+  const isSeller = user?.role === 'seller';
+  const isCourier = user?.role === 'courier';
 
   const doStatus = async (s) => {
     try { setOrder(await updateOrderStatus(orderId, s)); }
@@ -51,13 +88,15 @@ export default function OrderDetailScreen({ route }) {
     catch (e) { Alert.alert('Ошибка', e.response?.data?.message || 'Ошибка'); }
   };
 
-  const doCancel = () => Alert.alert('Отмена заказа', 'Вы уверены, что хотите отменить?', [
-    { text: 'Нет', style: 'cancel' },
-    { text: 'Да, отменить', style: 'destructive', onPress: async () => {
-      try { await cancelBySeller(orderId, 'Отменено'); load(); }
-      catch (e) { Alert.alert('Ошибка', e.response?.data?.message || 'Ошибка'); }
-    }},
-  ]);
+  const doCancel = () => setCancelModalVisible(true);
+  const handleCancelSubmit = async (reason) => {
+    setCancelModalVisible(false);
+    try {
+      if (isSeller) { await cancelBySeller(orderId, reason); }
+      else { await useOrderStore.getState().cancelByCourier(orderId, reason); }
+      load();
+    } catch (e) { Alert.alert('Ошибка', e.response?.data?.message || 'Ошибка'); }
+  };
 
   const doReview = async () => {
     if (!stars) { Alert.alert('Ошибка', 'Выберите оценку'); return; }
@@ -72,8 +111,6 @@ export default function OrderDetailScreen({ route }) {
     </View>
   );
 
-  const isSeller = user?.role === 'seller';
-  const isCourier = user?.role === 'courier';
   const theme = STATUS_THEME[order.status] || STATUS_THEME.created;
 
   return (
@@ -87,8 +124,16 @@ export default function OrderDetailScreen({ route }) {
         <Text style={styles.orderId}>Заказ #{order.id}</Text>
       </LinearGradient>
 
-      {/* Map */}
-      <OrderMap order={order} />
+      {/* Map with live courier tracking */}
+      <OrderMap order={order} courierLocation={courierLocation} />
+
+      {/* Delivery Timer */}
+      {order.timer_expires_at && ['on_way_client'].includes(order.status) && (
+        <DeliveryTimer label="Таймер доставки" expiresAt={order.timer_expires_at} icon="time-outline" color={COLORS.warning} />
+      )}
+      {order.confirm_expires_at && order.status === 'delivered' && (
+        <DeliveryTimer label="Таймер подтверждения" expiresAt={order.confirm_expires_at} icon="checkmark-circle-outline" color={COLORS.success} />
+      )}
 
       {/* Details card */}
       <View style={styles.card}>
@@ -145,6 +190,20 @@ export default function OrderDetailScreen({ route }) {
         </View>
       )}
 
+      {/* Chat button */}
+      {order.courier && ['accepted', 'on_way_shop', 'at_shop', 'on_way_client', 'delivered'].includes(order.status) && (
+        <Button
+          title="Открыть чат"
+          variant="outline"
+          onPress={() => {
+            const otherUser = isSeller ? order.courier : order.seller;
+            navigation.navigate('Chat', { orderId: order.id, otherUser });
+          }}
+          icon={<Ionicons name="chatbubbles-outline" size={20} color={COLORS.primary} />}
+          style={{ marginBottom: 14 }}
+        />
+      )}
+
       {/* Action buttons */}
       <View style={styles.actions}>
         {isCourier && order.status === ORDER_STATUS.ACCEPTED && (
@@ -171,6 +230,10 @@ export default function OrderDetailScreen({ route }) {
           <Button title="Отменить заказ" variant="danger" onPress={doCancel}
             icon={<Ionicons name="close-circle-outline" size={20} color={COLORS.danger} />} />
         )}
+        {isCourier && ['accepted', 'on_way_shop'].includes(order.status) && (
+          <Button title="Отказаться от заказа" variant="danger" onPress={doCancel}
+            icon={<Ionicons name="close-circle-outline" size={20} color={COLORS.danger} />} />
+        )}
       </View>
 
       {/* Review */}
@@ -183,11 +246,18 @@ export default function OrderDetailScreen({ route }) {
           <Button title="Отправить отзыв" onPress={doReview} disabled={!stars} />
         </View>
       )}
+      {/* Cancel reason modal */}
+      <CancelReasonModal
+        visible={cancelModalVisible}
+        onClose={() => setCancelModalVisible(false)}
+        onSubmit={handleCancelSubmit}
+        role={user?.role}
+      />
     </ScrollView>
   );
 }
 
-function OrderMap({ order }) {
+function OrderMap({ order, courierLocation }) {
   const mapRef = useRef(null);
   const sellerAddr = order.sellerAddress;
   const deliveryPoints = order.items?.filter((it) => it.latitude && it.longitude) || [];
@@ -197,6 +267,7 @@ function OrderMap({ order }) {
   const sellerCoord = { latitude: parseFloat(sellerAddr.latitude), longitude: parseFloat(sellerAddr.longitude) };
   const allCoords = [sellerCoord];
   deliveryPoints.forEach((p) => allCoords.push({ latitude: parseFloat(p.latitude), longitude: parseFloat(p.longitude) }));
+  if (courierLocation) allCoords.push(courierLocation);
 
   useEffect(() => {
     if (allCoords.length > 1 && mapRef.current) {
@@ -207,7 +278,7 @@ function OrderMap({ order }) {
         });
       }, 300);
     }
-  }, []);
+  }, [courierLocation]);
 
   return (
     <View style={styles.mapCard}>
@@ -217,8 +288,6 @@ function OrderMap({ order }) {
         initialRegion={{ ...sellerCoord, latitudeDelta: 0.03, longitudeDelta: 0.03 }}
         showsUserLocation
         showsMyLocationButton={false}
-        scrollEnabled={false}
-        zoomEnabled={false}
       >
         <Marker coordinate={sellerCoord} title="Магазин" description={sellerAddr.address_text}>
           <View style={[styles.mapMarker, { backgroundColor: COLORS.primary }]}>
@@ -237,6 +306,13 @@ function OrderMap({ order }) {
             </View>
           </Marker>
         ))}
+        {courierLocation && (
+          <Marker coordinate={courierLocation} title="Курьер" anchor={{ x: 0.5, y: 0.5 }}>
+            <View style={styles.courierMapMarker}>
+              <Ionicons name="navigate" size={18} color={COLORS.white} />
+            </View>
+          </Marker>
+        )}
         {allCoords.length > 1 && (
           <Polyline
             coordinates={allCoords}
@@ -255,7 +331,50 @@ function OrderMap({ order }) {
           <View style={[styles.legendDot, { backgroundColor: COLORS.success }]} />
           <Text style={styles.legendText}>Доставка</Text>
         </View>
+        {courierLocation && (
+          <View style={styles.legendItem}>
+            <View style={[styles.legendDot, { backgroundColor: COLORS.secondary }]} />
+            <Text style={styles.legendText}>Курьер</Text>
+          </View>
+        )}
       </View>
+    </View>
+  );
+}
+
+function DeliveryTimer({ label, expiresAt, icon, color }) {
+  const [remaining, setRemaining] = useState('');
+  const [isExpired, setIsExpired] = useState(false);
+
+  useEffect(() => {
+    const update = () => {
+      const now = Date.now();
+      const end = new Date(expiresAt).getTime();
+      const diff = end - now;
+      if (diff <= 0) {
+        setRemaining('00:00');
+        setIsExpired(true);
+        return;
+      }
+      const mins = Math.floor(diff / 60000);
+      const secs = Math.floor((diff % 60000) / 1000);
+      setRemaining(`${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`);
+    };
+    update();
+    const interval = setInterval(update, 1000);
+    return () => clearInterval(interval);
+  }, [expiresAt]);
+
+  return (
+    <View style={[styles.timerCard, isExpired && styles.timerCardExpired]}>
+      <View style={[styles.timerIconWrap, { backgroundColor: isExpired ? COLORS.dangerLight : `${color}20` }]}>
+        <Ionicons name={isExpired ? 'alert-circle' : icon} size={22} color={isExpired ? COLORS.danger : color} />
+      </View>
+      <View style={{ flex: 1 }}>
+        <Text style={styles.timerLabel}>{label}</Text>
+        <Text style={[styles.timerValue, isExpired && { color: COLORS.danger }]}>{remaining}</Text>
+      </View>
+      {isExpired && <Text style={styles.timerExpiredText}>Истёк!</Text>}
     </View>
   );
 }
@@ -386,4 +505,29 @@ const styles = StyleSheet.create({
   legendItem: { flexDirection: 'row', alignItems: 'center', gap: 6 },
   legendDot: { width: 10, height: 10, borderRadius: 5 },
   legendText: { fontSize: 12, fontWeight: '600', color: COLORS.textSecondary },
+
+  timerCard: {
+    flexDirection: 'row', alignItems: 'center', backgroundColor: COLORS.card,
+    borderRadius: 16, padding: 16, marginBottom: 14, gap: 12,
+    borderWidth: 1, borderColor: COLORS.borderLight, ...SHADOWS.small,
+  },
+  timerCardExpired: { borderColor: COLORS.danger, backgroundColor: COLORS.dangerLight },
+  timerIconWrap: {
+    width: 44, height: 44, borderRadius: 14, justifyContent: 'center', alignItems: 'center',
+  },
+  timerLabel: { fontSize: 13, color: COLORS.textSecondary, marginBottom: 2 },
+  timerValue: { fontSize: 24, fontWeight: '800', color: COLORS.text, letterSpacing: 1 },
+  timerExpiredText: { fontSize: 13, fontWeight: '700', color: COLORS.danger },
+
+  courierMapMarker: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: COLORS.secondary,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 3,
+    borderColor: COLORS.white,
+    ...SHADOWS.medium,
+  },
 });

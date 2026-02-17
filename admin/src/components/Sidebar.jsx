@@ -1,12 +1,13 @@
 import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Users, Package, DollarSign, LogOut } from 'lucide-react';
+import { LayoutDashboard, Users, Package, DollarSign, ShieldCheck, LogOut } from 'lucide-react';
 
 const links = [
   { to: '/', icon: LayoutDashboard, label: 'Дашборд' },
   { to: '/users', icon: Users, label: 'Пользователи' },
   { to: '/orders', icon: Package, label: 'Заказы' },
   { to: '/transactions', icon: DollarSign, label: 'Финансы' },
+  { to: '/moderation', icon: ShieldCheck, label: 'Модерация' },
 ];
 
 export default function Sidebar() {
