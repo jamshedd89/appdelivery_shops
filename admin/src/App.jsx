@@ -7,16 +7,26 @@ import UsersPage from './pages/UsersPage';
 import OrdersPage from './pages/OrdersPage';
 import TransactionsPage from './pages/TransactionsPage';
 
-function ProtectedRoute({ children }) { return localStorage.getItem('admin_token') ? children : <Navigate to="/login" replace />; }
+function ProtectedRoute({ children }) {
+  return localStorage.getItem('admin_token') ? children : <Navigate to="/login" replace />;
+}
 
 export default function App() {
   const loc = useLocation();
-  if (loc.pathname === '/login') return <Routes><Route path="/login" element={<LoginPage />} /></Routes>;
+
+  if (loc.pathname === '/login') {
+    return (
+      <Routes>
+        <Route path="/login" element={<LoginPage />} />
+      </Routes>
+    );
+  }
+
   return (
     <ProtectedRoute>
-      <div style={{ display: 'flex' }}>
+      <div className="flex">
         <Sidebar />
-        <main style={{ marginLeft: 260, flex: 1, minHeight: '100vh' }}>
+        <main className="ml-[260px] flex-1 min-h-screen bg-gray-50">
           <Routes>
             <Route path="/" element={<DashboardPage />} />
             <Route path="/users" element={<UsersPage />} />

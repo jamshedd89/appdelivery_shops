@@ -6,7 +6,9 @@
   "scripts": {
     "start": "node src/app.js",
     "dev": "nodemon src/app.js",
-    "db:sync": "node src/utils/syncDb.js"
+    "db:sync": "node src/utils/syncDb.js",
+    "db:seed": "node src/utils/seed.js",
+    "db:reset": "node src/utils/seed.js --force"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",

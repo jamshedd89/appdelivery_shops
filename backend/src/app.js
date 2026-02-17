@@ -29,7 +29,7 @@ async function start() {
     console.log('[DB] MySQL connected');
     await sequelize.sync({ alter: true });
     console.log('[DB] Models synchronized');
-    server.listen(PORT, () => console.log(`[Server] Running on port ${PORT}`));
+    server.listen(PORT, '0.0.0.0', () => console.log(`[Server] Running on 0.0.0.0:${PORT}`));
   } catch (err) { console.error('[Server] Failed:', err.message); process.exit(1); }
 }
 start();

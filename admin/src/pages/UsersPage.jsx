@@ -1,34 +1,142 @@
 import React, { useEffect, useState } from 'react';
 import { adminApi } from '../services/api';
-const STC = { active: '#4CAF50', pending: '#FF9800', limited: '#FF5722', blocked: '#F44336' };
-const STL = { active: 'Активен', pending: 'На модерации', limited: 'Ограничен', blocked: 'Заблокирован' };
+
+const STATUS_COLORS = {
+  active: 'bg-green-100 text-green-700',
+  pending: 'bg-amber-100 text-amber-700',
+  limited: 'bg-orange-100 text-orange-700',
+  blocked: 'bg-red-100 text-red-700',
+};
+const STATUS_LABELS = {
+  active: 'Активен',
+  pending: 'На модерации',
+  limited: 'Ограничен',
+  blocked: 'Заблокирован',
+};
+
 export default function UsersPage() {
-  const [users, setUsers] = useState([]); const [total, setTotal] = useState(0); const [f, setF] = useState({ role: '', status: '', search: '' }); const [ld, setLd] = useState(true);
-  const load = async () => { setLd(true); try { const p = {}; if (f.role) p.role = f.role; if (f.status) p.status = f.status; if (f.search) p.search = f.search; const { data } = await adminApi.getUsers(p); setUsers(data.data.users); setTotal(data.data.total); } catch {} finally { setLd(false); } };
-  useEffect(() => { load(); }, [f.role, f.status]);
-  const changeSt = async (id, st) => { try { await adminApi.updateUserStatus(id, st); load(); } catch (e) { alert(e.response?.data?.message || 'Error'); } };
-  const is = { padding: '10px 16px', border: '1px solid #E5E7EB', borderRadius: 10, fontSize: 14, outline: 'none', fontFamily: 'inherit' };
+  const [users, setUsers] = useState([]);
+  const [total, setTotal] = useState(0);
+  const [filters, setFilters] = useState({ role: '', status: '', search: '' });
+  const [loading, setLoading] = useState(true);
+
+  const load = async () => {
+    setLoading(true);
+    try {
+      const params = {};
+      if (filters.role) params.role = filters.role;
+      if (filters.status) params.status = filters.status;
+      if (filters.search) params.search = filters.search;
+      const { data } = await adminApi.getUsers(params);
+      setUsers(data.data.users);
+      setTotal(data.data.total);
+    } catch {
+      /* ignore */
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => { load(); }, [filters.role, filters.status]);
+
+  const changeStatus = async (id, status) => {
+    try {
+      await adminApi.updateUserStatus(id, status);
+      load();
+    } catch (e) {
+      alert(e.response?.data?.message || 'Error');
+    }
+  };
+
+  const headers = ['ID', 'Имя', 'Телефон', 'Роль', 'Рейтинг', 'Баланс', 'Статус', 'Действия'];
+
   return (
-    <div style={{ padding: 32 }}>
-      <h1 style={{ fontSize: 28, fontWeight: 700, marginBottom: 20 }}>Пользователи ({total})</h1>
-      <div style={{ display: 'flex', gap: 12, marginBottom: 20, flexWrap: 'wrap' }}>
-        <input style={{ ...is, width: 280 }} placeholder="Поиск..." value={f.search} onChange={(e) => setF({ ...f, search: e.target.value })} onKeyDown={(e) => e.key === 'Enter' && load()} />
-        <select style={{ ...is, backgroundColor: '#fff' }} value={f.role} onChange={(e) => setF({ ...f, role: e.target.value })}><option value="">Все роли</option><option value="seller">Продавцы</option><option value="courier">Курьеры</option></select>
-        <select style={{ ...is, backgroundColor: '#fff' }} value={f.status} onChange={(e) => setF({ ...f, status: e.target.value })}><option value="">Все статусы</option><option value="active">Активные</option><option value="pending">На модерации</option><option value="limited">Ограниченные</option><option value="blocked">Заблокированные</option></select>
+    <div className="p-8">
+      <h1 className="text-[28px] font-bold mb-5 text-dark">
+        Пользователи <span className="text-lg font-normal text-gray-400">({total})</span>
+      </h1>
+
+      {/* Filters */}
+      <div className="flex gap-3 mb-5 flex-wrap">
+        <input
+          className="filter-input w-72"
+          placeholder="Поиск по имени или телефону..."
+          value={filters.search}
+          onChange={(e) => setFilters({ ...filters, search: e.target.value })}
+          onKeyDown={(e) => e.key === 'Enter' && load()}
+        />
+        <select
+          className="filter-input"
+          value={filters.role}
+          onChange={(e) => setFilters({ ...filters, role: e.target.value })}
+        >
+          <option value="">Все роли</option>
+          <option value="seller">Продавцы</option>
+          <option value="courier">Курьеры</option>
+        </select>
+        <select
+          className="filter-input"
+          value={filters.status}
+          onChange={(e) => setFilters({ ...filters, status: e.target.value })}
+        >
+          <option value="">Все статусы</option>
+          <option value="active">Активные</option>
+          <option value="pending">На модерации</option>
+          <option value="limited">Ограниченные</option>
+          <option value="blocked">Заблокированные</option>
+        </select>
       </div>
-      <div style={{ backgroundColor: '#fff', borderRadius: 16, overflow: 'hidden', boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse' }}><thead><tr>{['ID','Имя','Телефон','Роль','Рейтинг','Баланс','Статус','Действия'].map((h) => <th key={h} style={{ textAlign: 'left', padding: '14px 16px', fontSize: 13, fontWeight: 600, color: '#6B7280', borderBottom: '1px solid #E5E7EB', backgroundColor: '#F9FAFB' }}>{h}</th>)}</tr></thead>
-        <tbody>{users.map((u) => <tr key={u.id} style={{ borderBottom: '1px solid #F3F4F6' }}>
-          <td style={{ padding: '12px 16px', fontSize: 14 }}>{u.id}</td>
-          <td style={{ padding: '12px 16px', fontSize: 14 }}>{u.first_name} {u.last_name}</td>
-          <td style={{ padding: '12px 16px', fontSize: 14 }}>{u.phone}</td>
-          <td style={{ padding: '12px 16px', fontSize: 14 }}><span style={{ padding: '4px 10px', borderRadius: 6, fontSize: 12, fontWeight: 600, backgroundColor: u.role === 'courier' ? '#E3F2FD' : '#F3E5F5', color: u.role === 'courier' ? '#1565C0' : '#7B1FA2' }}>{u.role === 'courier' ? 'Курьер' : 'Продавец'}</span></td>
-          <td style={{ padding: '12px 16px', fontSize: 14 }}>{u.rating?.toFixed(1)}</td>
-          <td style={{ padding: '12px 16px', fontSize: 14 }}>{parseFloat(u.balance).toFixed(2)}</td>
-          <td style={{ padding: '12px 16px', fontSize: 14 }}><span style={{ padding: '4px 10px', borderRadius: 6, fontSize: 12, fontWeight: 600, backgroundColor: (STC[u.status] || '#9E9E9E') + '20', color: STC[u.status] }}>{STL[u.status]}</span></td>
-          <td style={{ padding: '12px 16px', fontSize: 14 }}><select style={{ padding: '6px 10px', border: '1px solid #E5E7EB', borderRadius: 8, fontSize: 13, fontFamily: 'inherit', backgroundColor: '#fff' }} value={u.status} onChange={(e) => changeSt(u.id, e.target.value)}><option value="active">Активировать</option><option value="pending">На модерацию</option><option value="limited">Ограничить</option><option value="blocked">Заблокировать</option></select></td>
-        </tr>)}</tbody></table>
-        {ld && <div style={{ padding: 20, textAlign: 'center' }}>Загрузка...</div>}
+
+      {/* Table */}
+      <div className="bg-white rounded-2xl overflow-hidden shadow-sm">
+        <table className="w-full border-collapse">
+          <thead>
+            <tr>
+              {headers.map((h) => (
+                <th key={h} className="table-header">{h}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {users.map((u) => (
+              <tr key={u.id} className="border-b border-gray-100 hover:bg-gray-50/50 transition-colors">
+                <td className="table-cell">{u.id}</td>
+                <td className="table-cell font-medium">{u.first_name} {u.last_name}</td>
+                <td className="table-cell text-gray-500">{u.phone}</td>
+                <td className="table-cell">
+                  <span className={`badge ${u.role === 'courier' ? 'bg-blue-100 text-blue-700' : 'bg-purple-100 text-purple-700'}`}>
+                    {u.role === 'courier' ? 'Курьер' : 'Продавец'}
+                  </span>
+                </td>
+                <td className="table-cell">{u.rating?.toFixed(1)}</td>
+                <td className="table-cell font-medium">{parseFloat(u.balance).toFixed(2)}</td>
+                <td className="table-cell">
+                  <span className={`badge ${STATUS_COLORS[u.status] || 'bg-gray-100 text-gray-600'}`}>
+                    {STATUS_LABELS[u.status]}
+                  </span>
+                </td>
+                <td className="table-cell">
+                  <select
+                    className="px-2.5 py-1.5 border border-gray-200 rounded-lg text-[13px] font-sans bg-white focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 outline-none transition-all"
+                    value={u.status}
+                    onChange={(e) => changeStatus(u.id, e.target.value)}
+                  >
+                    <option value="active">Активировать</option>
+                    <option value="pending">На модерацию</option>
+                    <option value="limited">Ограничить</option>
+                    <option value="blocked">Заблокировать</option>
+                  </select>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        {loading && (
+          <div className="p-5 text-center text-gray-400 text-sm">Загрузка...</div>
+        )}
+        {!loading && users.length === 0 && (
+          <div className="p-10 text-center text-gray-400 text-sm">Пользователи не найдены</div>
+        )}
       </div>
     </div>
   );

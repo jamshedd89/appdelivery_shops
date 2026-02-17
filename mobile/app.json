@@ -6,21 +6,29 @@
     "orientation": "portrait",
     "userInterfaceStyle": "light",
     "splash": {
-      "backgroundColor": "#4A90D9"
+      "backgroundColor": "#4A6CF7"
     },
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "com.appdelivery.mobile",
+      "config": {
+        "googleMapsApiKey": "YOUR_IOS_GOOGLE_MAPS_API_KEY"
+      },
       "infoPlist": {
-        "NSLocationWhenInUseUsageDescription": "We need your location to find nearby orders and couriers",
-        "NSLocationAlwaysAndWhenInUseUsageDescription": "We need your location to track deliveries"
+        "NSLocationWhenInUseUsageDescription": "Нужен доступ к геолокации для поиска заказов и курьеров рядом",
+        "NSLocationAlwaysAndWhenInUseUsageDescription": "Нужен доступ к геолокации для отслеживания доставок"
       }
     },
     "android": {
       "adaptiveIcon": {
-        "backgroundColor": "#4A90D9"
+        "backgroundColor": "#4A6CF7"
       },
       "package": "com.appdelivery.mobile",
+      "config": {
+        "googleMaps": {
+          "apiKey": "YOUR_ANDROID_GOOGLE_MAPS_API_KEY"
+        }
+      },
       "permissions": [
         "ACCESS_COARSE_LOCATION",
         "ACCESS_FINE_LOCATION",
@@ -31,7 +39,8 @@
     "plugins": [
       "expo-location",
       "expo-image-picker",
-      "expo-secure-store"
+      "expo-secure-store",
+      "expo-asset"
     ]
   }
 }

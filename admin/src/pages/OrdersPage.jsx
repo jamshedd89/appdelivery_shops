@@ -1,28 +1,114 @@
 import React, { useEffect, useState } from 'react';
 import { adminApi } from '../services/api';
-const SL = { created: 'Создана', waiting: 'Ожидает', accepted: 'Принята', on_way_shop: 'К магазину', at_shop: 'На месте', on_way_client: 'К клиенту', delivered: 'Доставлено', confirmed: 'Подтверждено', completed: 'Завершено', cancelled_seller: 'Отм. продавцом', cancelled_courier: 'Отм. курьером', expired: 'Истёк' };
-const SC = { completed: '#4CAF50', confirmed: '#4CAF50', delivered: '#2196F3', cancelled_seller: '#F44336', cancelled_courier: '#F44336', expired: '#F44336', waiting: '#FF9800', accepted: '#FF9800', created: '#9E9E9E', on_way_shop: '#2196F3', at_shop: '#2196F3', on_way_client: '#2196F3' };
+
+const STATUS_LABELS = {
+  created: 'Создана', waiting: 'Ожидает', accepted: 'Принята',
+  on_way_shop: 'К магазину', at_shop: 'На месте', on_way_client: 'К клиенту',
+  delivered: 'Доставлено', confirmed: 'Подтверждено', completed: 'Завершено',
+  cancelled_seller: 'Отм. продавцом', cancelled_courier: 'Отм. курьером', expired: 'Истёк',
+};
+
+const STATUS_COLORS = {
+  completed: 'bg-green-100 text-green-700',
+  confirmed: 'bg-green-100 text-green-700',
+  delivered: 'bg-blue-100 text-blue-700',
+  cancelled_seller: 'bg-red-100 text-red-700',
+  cancelled_courier: 'bg-red-100 text-red-700',
+  expired: 'bg-red-100 text-red-700',
+  waiting: 'bg-amber-100 text-amber-700',
+  accepted: 'bg-amber-100 text-amber-700',
+  created: 'bg-gray-100 text-gray-600',
+  on_way_shop: 'bg-blue-100 text-blue-700',
+  at_shop: 'bg-blue-100 text-blue-700',
+  on_way_client: 'bg-blue-100 text-blue-700',
+};
+
 export default function OrdersPage() {
-  const [orders, setOrders] = useState([]); const [total, setTotal] = useState(0); const [sf, setSf] = useState(''); const [ld, setLd] = useState(true);
-  const load = async () => { setLd(true); try { const p = {}; if (sf) p.status = sf; const { data } = await adminApi.getOrders(p); setOrders(data.data.orders); setTotal(data.data.total); } catch {} finally { setLd(false); } };
-  useEffect(() => { load(); }, [sf]);
+  const [orders, setOrders] = useState([]);
+  const [total, setTotal] = useState(0);
+  const [statusFilter, setStatusFilter] = useState('');
+  const [loading, setLoading] = useState(true);
+
+  const load = async () => {
+    setLoading(true);
+    try {
+      const params = {};
+      if (statusFilter) params.status = statusFilter;
+      const { data } = await adminApi.getOrders(params);
+      setOrders(data.data.orders);
+      setTotal(data.data.total);
+    } catch {
+      /* ignore */
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => { load(); }, [statusFilter]);
+
+  const headers = ['ID', 'Продавец', 'Курьер', 'Стоимость', 'Комиссия', 'Товаров', 'Статус', 'Дата'];
+
   return (
-    <div style={{ padding: 32 }}>
-      <h1 style={{ fontSize: 28, fontWeight: 700, marginBottom: 20 }}>Заказы ({total})</h1>
-      <div style={{ display: 'flex', gap: 12, marginBottom: 20 }}><select style={{ padding: '10px 16px', border: '1px solid #E5E7EB', borderRadius: 10, fontSize: 14, fontFamily: 'inherit', backgroundColor: '#fff' }} value={sf} onChange={(e) => setSf(e.target.value)}><option value="">Все</option>{Object.entries(SL).map(([k, v]) => <option key={k} value={k}>{v}</option>)}</select></div>
-      <div style={{ backgroundColor: '#fff', borderRadius: 16, overflow: 'hidden', boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse' }}><thead><tr>{['ID','Продавец','Курьер','Стоимость','Комиссия','Товаров','Статус','Дата'].map((h) => <th key={h} style={{ textAlign: 'left', padding: '14px 16px', fontSize: 13, fontWeight: 600, color: '#6B7280', borderBottom: '1px solid #E5E7EB', backgroundColor: '#F9FAFB' }}>{h}</th>)}</tr></thead>
-        <tbody>{orders.map((o) => <tr key={o.id} style={{ borderBottom: '1px solid #F3F4F6' }}>
-          <td style={{ padding: '12px 16px', fontSize: 14 }}>#{o.id}</td>
-          <td style={{ padding: '12px 16px', fontSize: 14 }}>{o.seller ? `${o.seller.first_name} ${o.seller.last_name}` : '—'}</td>
-          <td style={{ padding: '12px 16px', fontSize: 14 }}>{o.courier ? `${o.courier.first_name} ${o.courier.last_name}` : '—'}</td>
-          <td style={{ padding: '12px 16px', fontSize: 14 }}>{o.delivery_cost} сом</td>
-          <td style={{ padding: '12px 16px', fontSize: 14 }}>{o.commission} сом</td>
-          <td style={{ padding: '12px 16px', fontSize: 14 }}>{o.items?.length || 0}</td>
-          <td style={{ padding: '12px 16px', fontSize: 14 }}><span style={{ padding: '4px 10px', borderRadius: 6, fontSize: 12, fontWeight: 600, backgroundColor: (SC[o.status] || '#9E9E9E') + '20', color: SC[o.status] || '#9E9E9E' }}>{SL[o.status] || o.status}</span></td>
-          <td style={{ padding: '12px 16px', fontSize: 14 }}>{new Date(o.created_at || o.createdAt).toLocaleString()}</td>
-        </tr>)}</tbody></table>
-        {ld && <div style={{ padding: 20, textAlign: 'center' }}>Загрузка...</div>}
+    <div className="p-8">
+      <h1 className="text-[28px] font-bold mb-5 text-dark">
+        Заказы <span className="text-lg font-normal text-gray-400">({total})</span>
+      </h1>
+
+      {/* Filters */}
+      <div className="flex gap-3 mb-5">
+        <select
+          className="filter-input"
+          value={statusFilter}
+          onChange={(e) => setStatusFilter(e.target.value)}
+        >
+          <option value="">Все статусы</option>
+          {Object.entries(STATUS_LABELS).map(([k, v]) => (
+            <option key={k} value={k}>{v}</option>
+          ))}
+        </select>
+      </div>
+
+      {/* Table */}
+      <div className="bg-white rounded-2xl overflow-hidden shadow-sm">
+        <table className="w-full border-collapse">
+          <thead>
+            <tr>
+              {headers.map((h) => (
+                <th key={h} className="table-header">{h}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {orders.map((o) => (
+              <tr key={o.id} className="border-b border-gray-100 hover:bg-gray-50/50 transition-colors">
+                <td className="table-cell font-medium">#{o.id}</td>
+                <td className="table-cell">
+                  {o.seller ? `${o.seller.first_name} ${o.seller.last_name}` : '—'}
+                </td>
+                <td className="table-cell">
+                  {o.courier ? `${o.courier.first_name} ${o.courier.last_name}` : '—'}
+                </td>
+                <td className="table-cell font-medium">{o.delivery_cost} сом</td>
+                <td className="table-cell text-gray-500">{o.commission} сом</td>
+                <td className="table-cell">{o.items?.length || 0}</td>
+                <td className="table-cell">
+                  <span className={`badge ${STATUS_COLORS[o.status] || 'bg-gray-100 text-gray-600'}`}>
+                    {STATUS_LABELS[o.status] || o.status}
+                  </span>
+                </td>
+                <td className="table-cell text-gray-500">
+                  {new Date(o.created_at || o.createdAt).toLocaleString()}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        {loading && (
+          <div className="p-5 text-center text-gray-400 text-sm">Загрузка...</div>
+        )}
+        {!loading && orders.length === 0 && (
+          <div className="p-10 text-center text-gray-400 text-sm">Заказы не найдены</div>
+        )}
       </div>
     </div>
   );

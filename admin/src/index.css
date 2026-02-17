@@ -1,1 +1,45 @@
-*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:#f5f7fa;color:#1a1a2e;line-height:1.5}a{text-decoration:none;color:inherit}
+@import "tailwindcss";
+
+@theme {
+  --color-primary-50: #EBF2FB;
+  --color-primary-100: #D6E5F7;
+  --color-primary-200: #ADC9EF;
+  --color-primary-300: #85AEE7;
+  --color-primary-400: #5C92DF;
+  --color-primary-500: #4A90D9;
+  --color-primary-600: #3A72AE;
+  --color-primary-700: #2B5582;
+  --color-primary-800: #1D3957;
+  --color-primary-900: #0E1C2B;
+
+  --color-dark: #1a1a2e;
+  --color-dark-50: #2d2d44;
+  --color-dark-100: #23233a;
+
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+@layer base {
+  body {
+    @apply font-sans bg-gray-50 text-dark leading-relaxed;
+  }
+  a {
+    @apply no-underline text-inherit;
+  }
+}
+
+@layer components {
+  .badge {
+    @apply px-2.5 py-1 rounded-md text-xs font-semibold inline-block;
+  }
+  .table-header {
+    @apply text-left px-4 py-3.5 text-[13px] font-semibold text-gray-500 border-b border-gray-200 bg-gray-50;
+  }
+  .table-cell {
+    @apply px-4 py-3 text-sm;
+  }
+  .filter-input {
+    @apply px-4 py-2.5 border border-gray-200 rounded-xl text-sm outline-none font-sans bg-white
+    focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 transition-all;
+  }
+}
