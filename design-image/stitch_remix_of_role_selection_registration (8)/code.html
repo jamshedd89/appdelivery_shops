@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Сообщения</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0df26c",
+                        "background-light": "#f5f8f7",
+                        "background-dark": "#102217",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-[#111814] dark:text-white antialiased">
+<div class="relative mx-auto min-h-screen max-w-[430px] bg-white dark:bg-black shadow-2xl flex flex-col">
+<!-- iOS Status Bar Spacer -->
+<div class="h-11 w-full bg-white dark:bg-black"></div>
+<!-- Header Section -->
+<header class="sticky top-0 z-10 bg-white/80 dark:bg-black/80 backdrop-blur-md px-4 pt-2 pb-4">
+<div class="flex items-center justify-between mb-4">
+<h1 class="text-[32px] font-bold tracking-tight">Сообщения</h1>
+<div class="flex gap-3">
+<button class="flex h-10 w-10 items-center justify-center rounded-full bg-background-light dark:bg-zinc-900">
+<span class="material-symbols-outlined text-[24px]">edit_square</span>
+</button>
+</div>
+</div>
+<!-- Search Bar -->
+<div class="relative group">
+<div class="absolute inset-y-0 left-3 flex items-center pointer-events-none text-zinc-400 group-focus-within:text-primary">
+<span class="material-symbols-outlined text-[20px]">search</span>
+</div>
+<input class="w-full h-11 bg-background-light dark:bg-zinc-900 border-none rounded-xl pl-10 pr-4 text-[15px] focus:ring-2 focus:ring-primary/50 placeholder:text-zinc-500" placeholder="Поиск сообщений или заказов..." type="text"/>
+</div>
+<!-- Filter Chips -->
+<div class="flex gap-2 mt-4 overflow-x-auto hide-scrollbar">
+<button class="whitespace-nowrap px-4 py-2 rounded-full bg-primary text-black text-sm font-semibold">Все</button>
+<button class="whitespace-nowrap px-4 py-2 rounded-full bg-background-light dark:bg-zinc-900 text-sm font-medium hover:bg-zinc-200">Активные</button>
+<button class="whitespace-nowrap px-4 py-2 rounded-full bg-background-light dark:bg-zinc-900 text-sm font-medium hover:bg-zinc-200">Продавцы</button>
+<button class="whitespace-nowrap px-4 py-2 rounded-full bg-background-light dark:bg-zinc-900 text-sm font-medium hover:bg-zinc-200">Курьеры</button>
+</div>
+</header>
+<!-- Chat List -->
+<main class="flex-1 px-4 py-2">
+<!-- Chat Row (Unread) -->
+<div class="group flex items-center gap-3 py-4 border-b border-zinc-100 dark:border-zinc-800 active:bg-zinc-50 transition-colors">
+<div class="relative flex-shrink-0">
+<div class="w-14 h-14 rounded-full bg-zinc-200 overflow-hidden border border-zinc-100">
+<img class="w-full h-full object-cover" data-alt="Professional courier profile headshot" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB3mEUFyopE2PxAWlsiZ1U-HjCrdr98EEudXaeh6qHCZFzHWZP4WYaREQoe2HlwqfLobeOkYI_nT7E5hl2gjUEKP8-UMbfEKYd3pnN7HpL7S55ELc9WI_YfHp18Wwnv0cVZ8xq7s0sP0cjBz9PdKfVKxtRiIuDMB7oAhJ-Mrom_RwvqNBnZ0qore2Y--sag7TZt8aYuiNwpxeU4MxAU5hnehrLMjg9SvLRN0QVlhTKiHLmw18udFfzR76rQn7gWQp8VWqfer7tOxcYy"/>
+</div>
+<div class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-primary border-2 border-white dark:border-black rounded-full"></div>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-baseline mb-0.5">
+<h3 class="font-bold text-[16px] truncate">Alex (Courier - #4421)</h3>
+<span class="text-xs font-semibold text-primary">14:20</span>
+</div>
+<div class="flex justify-between items-center">
+<p class="text-[14px] text-zinc-900 dark:text-zinc-100 font-semibold truncate pr-4">I've arrived at the pickup point. Waiting for the package.</p>
+<div class="w-5 h-5 bg-primary flex items-center justify-center rounded-full">
+<span class="text-[10px] font-bold text-black">2</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Chat Row (Read) -->
+<div class="group flex items-center gap-3 py-4 border-b border-zinc-100 dark:border-zinc-800 active:bg-zinc-50 transition-colors">
+<div class="relative flex-shrink-0">
+<div class="w-14 h-14 rounded-full bg-zinc-200 overflow-hidden border border-zinc-100">
+<img class="w-full h-full object-cover" data-alt="Small business owner logo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBIoM1ADpI8eiNdE0r5dBfpJomSN6EPuquJzOOiyHCDEHp3Ngj2suig5ZkQOuJyhrmR3KSdtLPJXaoufTypWoefWI4S4NTo1nC_YYSMs8XJpgBdFZ2JNtD-9ubNJd92mATU34fhG-uqH_-B82pYVDaFdHQhG8DXc18cwLXRbDnTp-s8rhUNG1yEuMhRxr68evQoCjKSJvMd2PWSEoss68_5HC5NqeqIZvOfx8SBJvJCboPWGva8HhOaaH-qUJbC3eT5D-DuE-zJLkVn"/>
+</div>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-baseline mb-0.5">
+<h3 class="font-bold text-[16px] truncate">Artisan Bakehouse</h3>
+<span class="text-xs text-zinc-400">12:05</span>
+</div>
+<div class="flex justify-between items-center">
+<p class="text-[14px] text-zinc-500 truncate pr-4">Your order is ready for dispatch. Please assign a courier.</p>
+</div>
+</div>
+</div>
+<!-- Chat Row (Courier) -->
+<div class="group flex items-center gap-3 py-4 border-b border-zinc-100 dark:border-zinc-800 active:bg-zinc-50 transition-colors">
+<div class="relative flex-shrink-0">
+<div class="w-14 h-14 rounded-full bg-zinc-200 overflow-hidden border border-zinc-100">
+<img class="w-full h-full object-cover" data-alt="Delivery driver portrait" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD-2NOACe440RQNpSQdW96iPfagTdmXLWiau5uzyTrb2zAPqh9_JCfhQseAroBbl3b8xy-0Cs6kS4v9o60TbzrSqEYByCvL6Tx9Lsu8BbZ_X6aMNdN0hnBuKqZugp4Prm6X3rs2WvqRo0wlXnajlZfPW1GNsNfRzWs0LmXfJqb6Pi6YVto9mo2G6J3RK9YqUutR7Vwq3Uyv2XPrRAfbp40m78OW9-fre6ZNyI31N1jkKcw7X_4ZqkfDPZIHlkbo5WY9VaTKp1_XYsQH"/>
+</div>
+<div class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-zinc-300 border-2 border-white dark:border-black rounded-full"></div>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-baseline mb-0.5">
+<h3 class="font-bold text-[16px] truncate">Maria (Courier - #4502)</h3>
+<span class="text-xs text-zinc-400">Вчера</span>
+</div>
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-1 text-[14px] text-zinc-500 truncate">
+<span class="material-symbols-outlined text-[16px]">photo</span>
+<p class="truncate">Фото прикреплено</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Chat Row (Read) -->
+<div class="group flex items-center gap-3 py-4 border-b border-zinc-100 dark:border-zinc-800 active:bg-zinc-50 transition-colors">
+<div class="relative flex-shrink-0">
+<div class="w-14 h-14 rounded-full bg-zinc-200 overflow-hidden border border-zinc-100">
+<img class="w-full h-full object-cover" data-alt="Business manager avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDPKboNJzJWLEpWFJM4IkM5wYJr1PfaDX34VM6wW_2GSNi0m_pIPqjCxatPkacL8_pfi2e7EHfvBEHsHnlGi-NtkrBn01dIUp7t75w5hodGg3FZabePkXAyN4Y6m41OROtKHyacvIjOygMu91HbEiRsxHUjW0r9dkVJ2diUhyBYlLsk_ykaKnnH41ek7cJajumxbpJcRhW1JwjgRqTNUQRX1j8KSI6rXAGcCHyKjMX2t-J548xjvlQ9zJPdcU_yS1RDiV4gYP7XHRPV"/>
+</div>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-baseline mb-0.5">
+<h3 class="font-bold text-[16px] truncate">Logistics Support</h3>
+<span class="text-xs text-zinc-400">Среда</span>
+</div>
+<div class="flex justify-between items-center">
+<p class="text-[14px] text-zinc-500 truncate pr-4">We've updated your payout details for this week.</p>
+</div>
+</div>
+</div>
+<!-- Chat Row (Seller) -->
+<div class="group flex items-center gap-3 py-4 border-b border-zinc-100 dark:border-zinc-800 active:bg-zinc-50 transition-colors">
+<div class="relative flex-shrink-0">
+<div class="w-14 h-14 rounded-full bg-zinc-200 overflow-hidden border border-zinc-100 flex items-center justify-center bg-zinc-100 dark:bg-zinc-900">
+<span class="material-symbols-outlined text-zinc-400">store</span>
+</div>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-baseline mb-0.5">
+<h3 class="font-bold text-[16px] truncate">Green Grocer Co.</h3>
+<span class="text-xs text-zinc-400">Понедельник</span>
+</div>
+<div class="flex justify-between items-center">
+<p class="text-[14px] text-zinc-500 truncate pr-4">Do you have refrigerated trucks available today?</p>
+</div>
+</div>
+</div>
+</main>
+<!-- Spacer for nav -->
+<div class="h-24"></div>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] bg-white/95 dark:bg-black/95 backdrop-blur-md border-t border-zinc-100 dark:border-zinc-900 px-6 pb-8 pt-2 z-50">
+<div class="flex justify-between items-center">
+<a class="flex flex-col items-center gap-1 text-zinc-400 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-[28px]">package_2</span>
+<span class="text-[10px] font-medium">Заказы</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-primary" href="#">
+<div class="relative">
+<span class="material-symbols-outlined text-[28px]" style="font-variation-settings: 'FILL' 1">chat_bubble</span>
+<div class="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full border-2 border-white dark:border-black"></div>
+</div>
+<span class="text-[10px] font-bold">Сообщения</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-zinc-400 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-[28px]">account_balance_wallet</span>
+<span class="text-[10px] font-medium">Кошелек</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-zinc-400 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-[28px]">person</span>
+<span class="text-[10px] font-medium">Профиль</span>
+</a>
+</div>
+<!-- iOS Home Indicator -->
+<div class="mx-auto mt-6 h-1.5 w-32 rounded-full bg-zinc-200 dark:bg-zinc-800"></div>
+</nav>
+</div>
+</body></html>

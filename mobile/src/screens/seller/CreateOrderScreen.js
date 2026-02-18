@@ -57,7 +57,7 @@ export default function CreateOrderScreen({ navigation }) {
   };
 
   return (
-    <KeyboardAvoidingView style={styles.flex} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+    <KeyboardAvoidingView style={styles.flex} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
       <ScrollView contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled">
         {/* Balance card */}
         <View style={[styles.card, insufficientBalance && styles.cardDanger]}>

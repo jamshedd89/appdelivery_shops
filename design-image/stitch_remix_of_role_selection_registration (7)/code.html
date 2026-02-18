@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>In-App Chat Messenger</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0df26c",
+                        "background-light": "#f5f8f7",
+                        "background-dark": "#102217",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        .message-shadow {
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-[#111814] font-display">
+<div class="relative flex h-screen w-full flex-col bg-white dark:bg-background-dark overflow-hidden max-w-md mx-auto shadow-2xl">
+<!-- Top App Bar -->
+<header class="sticky top-0 z-10 flex flex-col bg-white/80 dark:bg-background-dark/80 backdrop-blur-md border-b border-primary/10">
+<div class="flex items-center p-4 pb-2 justify-between gap-3">
+<div class="flex items-center gap-3 flex-1">
+<button class="flex items-center justify-center size-10 rounded-full hover:bg-primary/10 transition-colors">
+<span class="material-symbols-outlined text-[#111814] dark:text-white">arrow_back_ios_new</span>
+</button>
+<div class="relative">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-12 border-2 border-primary/20" data-alt="Professional portrait of a male courier smiling" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDjAN6Tkb6MMo42KDowZ_Z3lU0qoBK25zdDyN8XAWMwn07YWfhSM4uhJOmCfU8z-c8Lkzg_V2Zof6VH_L0wRERvBWzjGbmU-ROYraacE-wl1VpJISWxDKjGWMKU4DmU54LhFOphU-J2IY9HnriF9uV8Am7hJDUXp96D805KlWEKy_p0ve5gYeW5_Ydsq9rnA0ommpYsx7oIMNHOMBTw8uQSYDOH4BrPaNqOC-7KN2y22nB1C6fx5yIEpUhoagduWyIEdYftQ7m2GaKT");'></div>
+<div class="absolute bottom-0 right-0 size-3 bg-primary rounded-full border-2 border-white dark:border-background-dark"></div>
+</div>
+<div class="flex flex-col">
+<h2 class="text-[#111814] dark:text-white text-base font-bold leading-tight tracking-tight">Иван Иванов (Курьер)</h2>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-yellow-500 !text-[14px] fill-1" style="font-variation-settings: 'FILL' 1">star</span>
+<span class="text-[#608a72] text-xs font-semibold">4.8 • Профи доставки</span>
+</div>
+</div>
+</div>
+<button class="flex size-12 items-center justify-center rounded-full bg-primary text-[#111814] shadow-lg shadow-primary/20 active:scale-95 transition-transform">
+<span class="material-symbols-outlined font-bold">call</span>
+</button>
+</div>
+<!-- Quick Info Chip -->
+<div class="px-4 py-2 flex gap-2 overflow-x-auto no-scrollbar">
+<div class="flex items-center gap-1.5 px-3 py-1.5 bg-primary/10 rounded-full shrink-0">
+<span class="material-symbols-outlined !text-[16px] text-[#111814]">local_shipping</span>
+<span class="text-[11px] font-bold uppercase tracking-wider text-[#111814]">ЗАКАЗ #8291</span>
+</div>
+<div class="flex items-center gap-1.5 px-3 py-1.5 bg-background-light dark:bg-white/5 rounded-full shrink-0">
+<span class="material-symbols-outlined !text-[16px] text-[#608a72]">schedule</span>
+<span class="text-[11px] font-bold uppercase tracking-wider text-[#608a72]">ПРИБЫТИЕ: 4 МИН</span>
+</div>
+</div>
+</header>
+<!-- Chat History -->
+<main class="flex-1 overflow-y-auto p-4 space-y-6 flex flex-col">
+<div class="flex justify-center">
+<span class="text-[11px] font-bold text-[#608a72] uppercase tracking-widest bg-background-light dark:bg-white/5 px-3 py-1 rounded-full">СЕГОДНЯ</span>
+</div>
+<!-- Recipient Message -->
+<div class="flex items-end gap-2.5 max-w-[85%] group">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-8 shrink-0 mb-1" data-alt="Courier profile thumbnail" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCJ7hRvzk-59r9WjiSWDU9vtCGWRwEAfmKMc_VQl01vvTQczk7xWwB_JobzitC2-bStIkbpsfQG6eoan4Zry632aehGpMtLx1Nqb-Ekw2u9saoas7n3Jle-s1F5h8lUbOf75IuSwsMeJEyx8oCdfYGBVe85FCXLjcPlHdwnC4clzu-fLTM2MvfkakqGWfpzScocf6JugI_fCUYi3YhgYoGnT6Mt6oLRXn_N6QdDJrAr1fn9Ks4ONLV5lGAyAOreswN5bWkBM3cwVRAh");'></div>
+<div class="flex flex-col gap-1">
+<div class="bg-[#f0f5f2] dark:bg-white/10 text-[#111814] dark:text-white rounded-2xl rounded-bl-none px-4 py-3 message-shadow">
+<p class="text-[15px] leading-relaxed">Здравствуйте! Я у здания. Посылка готова у южного входа?</p>
+</div>
+<span class="text-[10px] text-[#608a72] font-medium ml-1">14:02</span>
+</div>
+</div>
+<!-- User Message (Seller) -->
+<div class="flex items-end gap-2.5 max-w-[85%] self-end flex-row-reverse">
+<div class="flex flex-col gap-1 items-end">
+<div class="bg-primary text-[#111814] rounded-2xl rounded-br-none px-4 py-3 message-shadow font-medium">
+<p class="text-[15px] leading-relaxed">Понял, спускаюсь. Буду через 2 минуты. Пришлете фото коробки?</p>
+</div>
+<div class="flex items-center gap-1 mr-1">
+<span class="text-[10px] text-[#608a72] font-medium">14:03</span>
+<span class="material-symbols-outlined !text-[14px] text-primary">done_all</span>
+</div>
+</div>
+</div>
+<!-- Recipient Image Sharing -->
+<div class="flex items-end gap-2.5 max-w-[85%] group">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-8 shrink-0 mb-1" data-alt="Courier profile thumbnail" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBUmGrcTtK-7YY2Iex9nMjasRvmCZvA6kJA__tXfEUmXHB1TO6YyMDvIBhw10zhYLWyT_lXNELnNi4yNrZ7uSS8ZKMkFq1TMvYWkagW9IZ1MwXtPuhhUj-GehfDuUJsk7EhhDtbd89iDVXfFHBp63jI3ydmFx8DZVYMCzxtfDhN17WHfALEvtn-aBIEgIQyjvv6XFXDPPKKyXzm0M5djmGLi-egL0fQLVcsX2UyYkPViTIOvmDjw9u6Jmd5rBSQRvGoOPAW0Z2B0PUW");'></div>
+<div class="flex flex-col gap-1">
+<div class="bg-[#f0f5f2] dark:bg-white/10 rounded-2xl rounded-bl-none p-1 message-shadow overflow-hidden">
+<div class="bg-center bg-no-repeat aspect-[4/3] bg-cover rounded-xl w-64" data-alt="Brown cardboard delivery box with secure tape" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuA9cjSaScb_2qEoOnjwsYRsTWvMpRbcco1KU-BMTQoLNBZHVgPRPHJK4Cq36w99S2tHyuKhQrmCZXMCl9ZXMaLizrhy54a6_1WkTOdpsL0BNxrgEqyTfrQvd8qnNSwQzrHsQLob3SsH5TIrAGBssI596YYI4JEdpFNdoAbva9EzBSoG6ZOeooIMND02aZzL02rqwzD2ry8SKoksQx8STqSfJNEerRscJSc99fyUtEMHn5tb6MMmTXNKCE9pxk4MZ54QUUoMyDugMDhB");'></div>
+<p class="text-[14px] px-3 py-2 text-[#111814] dark:text-white">Вот фото. Коробка запечатана.</p>
+</div>
+<span class="text-[10px] text-[#608a72] font-medium ml-1">14:05</span>
+</div>
+</div>
+<!-- User Shared Location -->
+<div class="flex items-end gap-2.5 max-w-[85%] self-end flex-row-reverse">
+<div class="flex flex-col gap-1 items-end">
+<div class="bg-primary text-[#111814] rounded-2xl rounded-br-none p-1 message-shadow w-64">
+<div class="bg-center bg-no-repeat aspect-video bg-cover rounded-xl relative overflow-hidden" data-alt="Digital map showing current location pin" data-location="San Francisco" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAvyrdRsGe8PNsYp6H9QvUQOTA6ITHq-26oRtewyFkbFebOs15OxjoXE3y4Ewx_nAarZPWw9E2DY3DBfz_P4DIGGCjiNSmzT7hGKsI0GTRC0lyofFLhI7r-DkB2WZG9a94Xql_jiGgDaAE5mBtyrqPrNmHfo_jnfszYYmPUqt5qCOhXTT87cp5WZDGiubMfLJBarhFCbVuQ8TgZHEdAoSsWFO05qrGwgOBzzf2nB1tBSXEC4B-op-Av2fBLj_Zh1o7lWeVRNdBoTwH6");'>
+<div class="absolute inset-0 bg-black/10 flex items-center justify-center">
+<div class="size-10 bg-white rounded-full flex items-center justify-center shadow-lg">
+<span class="material-symbols-outlined text-primary !text-[28px]" style="font-variation-settings: 'FILL' 1">location_on</span>
+</div>
+</div>
+</div>
+<div class="px-3 py-2">
+<p class="text-[14px] font-bold">Южный вход</p>
+<p class="text-[12px] opacity-80">Я жду здесь</p>
+</div>
+</div>
+<div class="flex items-center gap-1 mr-1">
+<span class="text-[10px] text-[#608a72] font-medium">14:06</span>
+<span class="material-symbols-outlined !text-[14px] text-primary">done_all</span>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Input Bar -->
+<footer class="p-4 bg-white dark:bg-background-dark border-t border-primary/10 pb-8">
+<div class="flex items-center gap-2">
+<button class="flex size-11 shrink-0 items-center justify-center rounded-full bg-background-light dark:bg-white/5 text-[#111814] dark:text-white active:scale-90 transition-transform">
+<span class="material-symbols-outlined">add</span>
+</button>
+<div class="flex-1 relative flex items-center">
+<input class="w-full bg-background-light dark:bg-white/5 border-none rounded-full py-3 px-5 text-[15px] focus:ring-2 focus:ring-primary/50 dark:text-white placeholder-[#608a72]" placeholder="Введите сообщение..." type="text"/>
+<div class="absolute right-3 flex items-center gap-2">
+<button class="text-[#608a72] hover:text-primary transition-colors">
+<span class="material-symbols-outlined !text-[20px]">sticky_note_2</span>
+</button>
+</div>
+</div>
+<button class="flex size-11 shrink-0 items-center justify-center rounded-full bg-primary text-[#111814] shadow-lg shadow-primary/20 active:scale-90 transition-transform">
+<span class="material-symbols-outlined font-bold">mic</span>
+</button>
+</div>
+</footer>
+<!-- iPhone Notch Area Emulation -->
+<div class="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-6 bg-black rounded-b-2xl z-50"></div>
+</div>
+</body></html>

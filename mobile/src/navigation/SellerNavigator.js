@@ -10,7 +10,11 @@ import OrderDetailScreen from '../screens/shared/OrderDetailScreen';
 import ProfileScreen from '../screens/shared/ProfileScreen';
 import AddressPickerScreen from '../screens/shared/AddressPickerScreen';
 import ChatScreen from '../screens/shared/ChatScreen';
-import { COLORS, SHADOWS } from '../utils/constants';
+import WalletScreen from '../screens/shared/WalletScreen';
+import NotificationsScreen from '../screens/shared/NotificationsScreen';
+import OrderHistoryScreen from '../screens/shared/OrderHistoryScreen';
+import LegalScreen from '../screens/shared/LegalScreen';
+import { COLORS } from '../utils/constants';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -32,6 +36,29 @@ function OrdersStack() {
       <Stack.Screen name="OrderDetail" component={OrderDetailScreen} options={{ title: 'Детали заказа' }} />
       <Stack.Screen name="AddressPicker" component={AddressPickerScreen} options={{ title: 'Выбор адреса', headerTransparent: true, headerTintColor: COLORS.text }} />
       <Stack.Screen name="Chat" component={ChatScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="Notifications" component={NotificationsScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="Legal" component={LegalScreen} options={{ headerShown: false }} />
+    </Stack.Navigator>
+  );
+}
+
+function HistoryStack() {
+  return (
+    <Stack.Navigator screenOptions={stackOptions}>
+      <Stack.Screen name="OrderHistory" component={OrderHistoryScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="OrderDetail" component={OrderDetailScreen} options={{ title: 'Детали заказа' }} />
+      <Stack.Screen name="Chat" component={ChatScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="Notifications" component={NotificationsScreen} options={{ headerShown: false }} />
+    </Stack.Navigator>
+  );
+}
+
+function ProfileStack() {
+  return (
+    <Stack.Navigator screenOptions={stackOptions}>
+      <Stack.Screen name="ProfileMain" component={ProfileScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="Legal" component={LegalScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="Notifications" component={NotificationsScreen} options={{ headerShown: false }} />
     </Stack.Navigator>
   );
 }
@@ -42,37 +69,27 @@ export default function SellerNavigator() {
     <Tab.Navigator
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color }) => {
-          const name = route.name === 'Orders' ? 'list' : 'person';
-          return (
-            <View style={focused ? styles.activeTab : undefined}>
-              <Ionicons name={focused ? name : `${name}-outline`} size={22} color={color} />
-            </View>
-          );
+          const icons = { Orders: 'grid', Wallet: 'wallet', History: 'time', Support: 'chatbubble-ellipses', Profile: 'person' };
+          const name = icons[route.name] || 'grid';
+          return <Ionicons name={focused ? name : `${name}-outline`} size={24} color={color} />;
         },
         tabBarActiveTintColor: COLORS.primary,
         tabBarInactiveTintColor: COLORS.textMuted,
-        tabBarLabelStyle: { fontSize: 12, fontWeight: '600' },
+        tabBarLabelStyle: { fontSize: 10, fontWeight: '700' },
         tabBarStyle: {
           backgroundColor: COLORS.white,
-          borderTopWidth: 0,
-          paddingBottom: Math.max(insets.bottom, 6),
+          borderTopWidth: 1,
+          borderTopColor: COLORS.borderLight,
+          paddingBottom: Math.max(insets.bottom, 8),
           paddingTop: 6,
-          ...SHADOWS.medium,
         },
         headerShown: false,
       })}
     >
-      <Tab.Screen name="Orders" component={OrdersStack} options={{ title: 'Заявки' }} />
-      <Tab.Screen name="Profile" component={ProfileScreen} options={{ title: 'Профиль' }} />
+      <Tab.Screen name="Orders" component={OrdersStack} options={{ title: 'Дашборд' }} />
+      <Tab.Screen name="History" component={HistoryStack} options={{ title: 'История' }} />
+      <Tab.Screen name="Wallet" component={WalletScreen} options={{ title: 'Кошелёк' }} />
+      <Tab.Screen name="Profile" component={ProfileStack} options={{ title: 'Профиль' }} />
     </Tab.Navigator>
   );
 }
-
-const styles = {
-  activeTab: {
-    backgroundColor: COLORS.primaryGhost,
-    borderRadius: 12,
-    padding: 6,
-    marginBottom: -4,
-  },
-};

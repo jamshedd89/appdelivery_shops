@@ -26,13 +26,13 @@ export const TRANSPORT_ICONS = {
 };
 
 export const COLORS = {
-  primary: '#4A6CF7',
-  primaryDark: '#3B5DE7',
-  primaryLight: '#6B8CFF',
-  primaryGhost: '#EEF2FF',
+  primary: '#0df26c',
+  primaryDark: '#0ac95a',
+  primaryLight: '#3ff58a',
+  primaryGhost: 'rgba(13, 242, 108, 0.08)',
 
-  secondary: '#7C3AED',
-  secondaryLight: '#A78BFA',
+  secondary: '#102217',
+  secondaryLight: '#1a3a25',
 
   success: '#10B981',
   successLight: '#D1FAE5',
@@ -41,30 +41,31 @@ export const COLORS = {
   danger: '#EF4444',
   dangerLight: '#FEE2E2',
 
-  background: '#F8FAFC',
+  background: '#f5f8f7',
   card: '#FFFFFF',
-  cardAlt: '#F1F5F9',
+  cardAlt: '#f0f5f2',
 
-  text: '#0F172A',
-  textSecondary: '#64748B',
+  text: '#111814',
+  textSecondary: '#608a72',
   textMuted: '#94A3B8',
 
-  border: '#E2E8F0',
-  borderLight: '#F1F5F9',
-  divider: '#F1F5F9',
+  border: '#e0e8e3',
+  borderLight: '#f0f5f2',
+  divider: '#f0f5f2',
 
   white: '#FFFFFF',
   black: '#000000',
+  dark: '#102217',
 
   gradient: {
-    primary: ['#4A6CF7', '#7C3AED'],
-    dark: ['#1E293B', '#0F172A'],
+    primary: ['#0df26c', '#0ac95a'],
+    dark: ['#102217', '#0a150e'],
     success: ['#10B981', '#059669'],
     warm: ['#F59E0B', '#EF4444'],
   },
 
   shadow: {
-    color: '#4A6CF7',
+    color: '#0df26c',
     light: 'rgba(0, 0, 0, 0.04)',
     medium: 'rgba(0, 0, 0, 0.08)',
   },

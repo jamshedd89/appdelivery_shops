@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Logistics App Lock Screen</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0df26c",
+                        "background-light": "#f5f8f7",
+                        "background-dark": "#102217",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        .ios-blur {
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            background-color: rgba(255, 255, 255, 0.7);
+        }
+        .wallpaper-overlay {
+            background: linear-gradient(180deg, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.4) 100%);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display">
+<!-- Mobile Lock Screen Container -->
+<div class="relative mx-auto my-8 h-[844px] w-[390px] overflow-hidden rounded-[3rem] border-[8px] border-gray-900 bg-black shadow-2xl">
+<!-- Wallpaper Background -->
+<div class="absolute inset-0 z-0">
+<div class="h-full w-full bg-cover bg-center wallpaper-overlay" data-alt="Abstract green and dark fluid gradient wallpaper" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDNgMX4j85REoOedG-XFvVZbhkEvObxfrW8LrX-L1yQPjCE0tXKMmXlDa6gisPwlijzLsHfzgco3CYxb3QofRF7cPUuRs3_qEXTpWnNNFWcRswGrRIX3LiV6UZSo58Mv4Be0ts0TpxO9wbFG3_1-YN_lW-goHtFPO9UfHKM-H3aH-eXLyvxRt2DHqZgEciuDl__BsmDiR8EE0pF__QjwVbKuSZM3ZVahx7fqGBkgK5YXh3VZ0XChPm7kSr5JnAzWj9KT5I3gsfQSxXx');"></div>
+</div>
+<!-- Lock Screen Content -->
+<div class="relative z-10 flex h-full flex-col px-6 pt-16 pb-10">
+<!-- Clock and Date -->
+<div class="mb-12 flex flex-col items-center text-white">
+<p class="text-xl font-medium opacity-90">Вторник, 24 Октября</p>
+<h1 class="mt-2 text-[5rem] font-bold leading-none tracking-tight">10:42</h1>
+</div>
+<!-- Notifications Area -->
+<div class="flex flex-col gap-3 overflow-y-auto no-scrollbar">
+<!-- Notification 1: Courier View (High Priority) -->
+<div class="ios-blur group w-full animate-fade-in rounded-2xl p-4 shadow-sm">
+<div class="flex items-center justify-between gap-2">
+<div class="flex items-center gap-2">
+<div class="flex h-6 w-6 items-center justify-center rounded-lg bg-primary text-background-dark">
+<span class="material-symbols-outlined text-sm font-bold">local_shipping</span>
+</div>
+<span class="text-xs font-semibold uppercase tracking-wider text-gray-800 opacity-70">ДОСТАВКА</span>
+</div>
+<span class="text-xs font-medium text-gray-800 opacity-60">Сейчас</span>
+</div>
+<div class="mt-3 flex gap-3">
+<div class="h-16 w-16 flex-shrink-0 overflow-hidden rounded-lg bg-gray-200">
+<div class="h-full w-full bg-cover bg-center" data-alt="Aerial view of a city map with logistics route pins" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDc82GyOUxtgGx81mHXzAfCtCqgeXXTO5d1AuJSm9WMM1vPkaBM61RRiK2pGY3RyezydPK49EapidzaOapb2MV0YcczvCut4MR9uDeW9PBj2RoqDH1ZRM2xjqcgw1ZitG7Vk1vI4NqcjL_wdrGB9DsjJc3vNGUfSRCCaVYh1fjmiABMnuXcZmIYCUXy0gWDzNm6idLI5xrfHAZKpWWky1VT8Z6AyOafZReKlJ2QExv2UHQGDcWkfEhVwKjoqNkVic3e9CiWSGDnI3d_');"></div>
+</div>
+<div class="flex flex-col justify-center overflow-hidden">
+<h3 class="truncate text-base font-bold text-gray-900">Доступен новый заказ!</h3>
+<p class="truncate text-sm font-medium text-gray-700">$12.50 • 2.4 миль</p>
+</div>
+</div>
+<div class="mt-4 flex justify-end">
+<button class="rounded-lg bg-primary px-6 py-2 text-sm font-bold text-background-dark shadow-sm transition-transform active:scale-95">Смотреть</button>
+</div>
+</div>
+<!-- Notification 2: Seller View -->
+<div class="ios-blur w-full rounded-2xl p-4 shadow-sm opacity-95">
+<div class="flex items-center justify-between gap-2">
+<div class="flex items-center gap-2">
+<div class="flex h-6 w-6 items-center justify-center rounded-lg bg-blue-500 text-white">
+<span class="material-symbols-outlined text-sm font-bold">person_pin_circle</span>
+</div>
+<span class="text-xs font-semibold uppercase tracking-wider text-gray-800 opacity-70">ДОСТАВКА</span>
+</div>
+<span class="text-xs font-medium text-gray-800 opacity-60">5 мин назад</span>
+</div>
+<div class="mt-2 flex items-start gap-3">
+<div class="flex-1">
+<h3 class="text-base font-bold text-gray-900">Курьер прибыл</h3>
+<p class="text-sm font-medium leading-snug text-gray-700">Алекс в магазине для заказа #4402. Пожалуйста, передайте посылку.</p>
+</div>
+<div class="h-12 w-12 flex-shrink-0 overflow-hidden rounded-full border-2 border-white bg-gray-200">
+<div class="h-full w-full bg-cover bg-center" data-alt="Portrait of a smiling delivery courier" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAkOBi_TESQkADXp0CArqjh8s4_tLcpSI5Ix2k0hbl9pIZmU8IYYcCoxdmhvy6H5TSw8-R_rlxXOn67ZAeqLRBFtTMMJp43HK_Xj8SCOe6eNhzYa98lr71lpjSm0N_cYFjekgyLWgG88hQjK65n3nv2rnHBwbjdRlH5YAG3jept0c_X7TumkOJ242XGt358vzLYJ3jabzpNDdhjoBmJGXR6HhSOSZZ-o7DrMwu2isblG4NVGD0dLJ6t4zBJF322GzFINlA4IIn6e364');"></div>
+</div>
+</div>
+</div>
+<!-- Notification 3: Financial -->
+<div class="ios-blur w-full rounded-2xl p-4 shadow-sm opacity-85">
+<div class="flex items-center justify-between gap-2">
+<div class="flex items-center gap-2">
+<div class="flex h-6 w-6 items-center justify-center rounded-lg bg-emerald-600 text-white">
+<span class="material-symbols-outlined text-sm font-bold">account_balance_wallet</span>
+</div>
+<span class="text-xs font-semibold uppercase tracking-wider text-gray-800 opacity-70">ДОСТАВКА</span>
+</div>
+<span class="text-xs font-medium text-gray-800 opacity-60">15 мин назад</span>
+</div>
+<div class="mt-2">
+<h3 class="text-base font-bold text-gray-900">Пополнение баланса</h3>
+<p class="text-sm font-medium text-gray-700">+$150.00 успешно добавлено в кошелек. Текущий баланс: $1,420.50</p>
+</div>
+</div>
+</div>
+<!-- Spacer -->
+<div class="flex-grow"></div>
+<!-- Bottom Quick Actions -->
+<div class="mb-6 flex w-full items-center justify-between px-2">
+<div class="flex h-12 w-12 items-center justify-center rounded-full bg-white/20 text-white backdrop-blur-md">
+<span class="material-symbols-outlined">flashlight_on</span>
+</div>
+<div class="flex h-12 w-12 items-center justify-center rounded-full bg-white/20 text-white backdrop-blur-md">
+<span class="material-symbols-outlined">photo_camera</span>
+</div>
+</div>
+<!-- Home Indicator -->
+<div class="mx-auto h-1.5 w-32 rounded-full bg-white/80"></div>
+</div>
+<!-- Notch/Dynamic Island -->
+<div class="absolute top-0 left-1/2 z-20 h-8 w-32 -translate-x-1/2 rounded-b-2xl bg-black"></div>
+<!-- Status Bar Elements -->
+<div class="absolute top-2 left-8 z-20 text-[11px] font-bold text-white">Оператор</div>
+<div class="absolute top-2 right-8 z-20 flex items-center gap-1.5 text-white">
+<span class="material-symbols-outlined text-sm">signal_cellular_4_bar</span>
+<span class="material-symbols-outlined text-sm">wifi</span>
+<span class="material-symbols-outlined text-sm rotate-90">battery_full</span>
+</div>
+</div>
+</body></html>

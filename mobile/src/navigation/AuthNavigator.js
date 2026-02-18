@@ -13,19 +13,16 @@ export default function AuthNavigator() {
   return (
     <Stack.Navigator
       screenOptions={{
-        headerStyle: { backgroundColor: COLORS.background },
-        headerTintColor: COLORS.text,
-        headerShadowVisible: false,
-        headerTitleStyle: { fontWeight: '700', fontSize: 17 },
-        headerBackTitleVisible: false,
-        contentStyle: { backgroundColor: COLORS.background },
+        headerShown: false,
+        contentStyle: { backgroundColor: COLORS.white },
+        animation: 'slide_from_right',
       }}
     >
-      <Stack.Screen name="RoleSelect" component={RoleSelectScreen} options={{ headerShown: false }} />
-      <Stack.Screen name="Login" component={LoginScreen} options={{ title: 'Вход' }} />
-      <Stack.Screen name="RegisterSeller" component={RegisterSellerScreen} options={{ title: 'Регистрация' }} />
-      <Stack.Screen name="RegisterCourier" component={RegisterCourierScreen} options={{ title: 'Регистрация' }} />
-      <Stack.Screen name="AddressPicker" component={AddressPickerScreen} options={{ title: 'Выбор адреса', headerTransparent: true, headerTintColor: COLORS.text }} />
+      <Stack.Screen name="RoleSelect" component={RoleSelectScreen} />
+      <Stack.Screen name="Login" component={LoginScreen} />
+      <Stack.Screen name="RegisterSeller" component={RegisterSellerScreen} />
+      <Stack.Screen name="RegisterCourier" component={RegisterCourierScreen} />
+      <Stack.Screen name="AddressPicker" component={AddressPickerScreen} options={{ headerShown: true, title: 'Выбор адреса', headerTransparent: true, headerTintColor: COLORS.text }} />
     </Stack.Navigator>
   );
 }

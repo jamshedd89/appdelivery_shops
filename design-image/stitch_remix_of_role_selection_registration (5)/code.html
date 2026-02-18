@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+
+<html class="light" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Seller Management Dashboard</title>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0df26c",
+                        "background-light": "#f5f8f7",
+                        "background-dark": "#102217",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display min-h-screen flex flex-col">
+<!-- Header & Profile Section -->
+<header class="sticky top-0 z-50 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md px-6 pt-12 pb-4">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="size-12 rounded-full bg-primary/20 flex items-center justify-center overflow-hidden border-2 border-primary/30">
+<img alt="Store Manager Portrait" class="w-full h-full object-cover" data-alt="Professional portrait of a male store manager" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDtx8vGOg4HDJaaO_sDKlUY7UO-8gm4PC-Q4sjA-OQuuXMdR2yq7o6Qom4WU80yqSFbtbeOOO21uKJnS6CGFnooTi8hCVj986vjqIQMZOWmHs5e0d6EWBzCNHW_FdSHc08qSiVp5L-466dqMmjevbeRlMzGPlD3sCyWJ39bgIj12b0sGWKel-Xqd6-v4buo6T6RyBeBd5iV6kWe4UtvO-1h6OW4hB3zMRn4sVFeDzjSIedsgD4rHRSSnHoLtn51OHgPWL49Qxlk3js9"/>
+</div>
+<div>
+<p class="text-xs text-slate-500 dark:text-slate-400 font-medium">С возвращением,</p>
+<h1 class="text-lg font-bold leading-none">Green Market Co.</h1>
+</div>
+</div>
+<button class="relative p-2 rounded-full bg-white dark:bg-slate-800 shadow-sm border border-slate-200 dark:border-slate-700">
+<span class="material-symbols-outlined text-slate-600 dark:text-slate-300">notifications</span>
+<span class="absolute top-2 right-2.5 size-2 bg-red-500 rounded-full border-2 border-white dark:border-slate-800"></span>
+</button>
+</div>
+</header>
+<main class="flex-1 px-6 pb-24">
+<!-- Balance Card -->
+<div class="mt-4 p-5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm flex items-center justify-between">
+<div>
+<p class="text-sm text-slate-500 dark:text-slate-400 font-medium">Текущий баланс</p>
+<p class="text-2xl font-extrabold text-slate-900 dark:text-white mt-1">$124.50</p>
+<p class="text-[10px] text-primary font-bold uppercase tracking-wider mt-1 flex items-center gap-1"><span class="material-symbols-outlined text-xs">info</span> Низкий баланс</p>
+</div>
+<button class="bg-primary text-background-dark px-4 py-2.5 rounded-full font-bold text-sm shadow-lg shadow-primary/20 active:scale-95 transition-transform">Пополнить</button>
+</div>
+<!-- Main Action -->
+<div class="mt-6">
+<button class="w-full bg-primary text-background-dark py-4 rounded-full font-bold text-lg flex items-center justify-center gap-2 shadow-xl shadow-primary/10 active:scale-[0.98] transition-all"><span class="material-symbols-outlined">add_circle</span> Создать новую доставку</button>
+</div>
+<!-- Active Deliveries Section -->
+<div class="mt-8">
+<div class="flex items-center justify-between mb-4">
+<h2 class="text-xl font-bold">Активные доставки</h2>
+<span class="bg-primary/10 text-primary px-3 py-1 rounded-full text-xs font-bold">4 заказа</span>
+</div>
+<!-- Delivery List -->
+<div class="space-y-4">
+<!-- Card 1: Searching -->
+<div class="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+<div class="flex justify-between items-start mb-3">
+<div>
+<span class="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">Order #DX-9021</span>
+<h3 class="font-bold text-slate-900 dark:text-white">128 Oak St, Brooklyn</h3>
+</div>
+<span class="px-3 py-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 rounded-full text-[10px] font-bold flex items-center gap-1"><span class="size-1.5 bg-slate-400 rounded-full animate-pulse"></span> Поиск...</span>
+</div>
+<div class="flex items-center gap-3 mt-4 p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-dashed border-slate-200 dark:border-slate-700">
+<div class="size-10 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center">
+<span class="material-symbols-outlined text-slate-400">person_search</span>
+</div>
+<div class="flex-1">
+<p class="text-xs text-slate-500 font-medium">Ищем ближайшего курьера</p>
+<div class="w-full bg-slate-200 dark:bg-slate-700 h-1 mt-2 rounded-full overflow-hidden">
+<div class="bg-primary h-full w-1/3 rounded-full"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Card 2: En Route -->
+<div class="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+<div class="flex justify-between items-start mb-3">
+<div>
+<span class="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">Order #DX-8842</span>
+<h3 class="font-bold text-slate-900 dark:text-white">45 Fifth Ave, Manhattan</h3>
+</div>
+<span class="px-3 py-1 bg-primary/10 text-primary rounded-full text-[10px] font-bold flex items-center gap-1"><span class="size-1.5 bg-primary rounded-full"></span> В пути</span>
+</div>
+<div class="flex items-center gap-3 mt-4 p-3 bg-white dark:bg-slate-900 rounded-lg border border-slate-100 dark:border-slate-800">
+<div class="size-10 rounded-full overflow-hidden">
+<img alt="Courier Portrait" class="w-full h-full object-cover" data-alt="Portrait of a male delivery courier" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCu-x_kK8ZJ0FH_Nur4HIdZqQzEIv1k7weOika5qVsz3HrCzh9hE4llRAT0stu9O4KDBOhsCYOL55iuBI2y5d-_r2u6Yqivjw_uwfZwWSdNoF4rx5l2IFTGGf--RUWh5tDJW83gS4yCSbP0otFC6LCpzIUjvba7-dKR062BJ-nxpmcVJ7Wqv1p3VFJHOUD0_3XF8RX3upKnui4ntAfEWgNqvVhruCTipELelhG58UwyR964RyQxA0QUpvxBI7tJFWH25ge-Bg6kVxXR"/>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-center">
+<p class="text-sm font-bold">Текущий баланс</p>
+<p class="text-[10px] font-bold text-slate-400">в 2 мин.</p>
+</div>
+<div class="flex items-center gap-1 text-xs text-slate-500">
+<span class="material-symbols-outlined text-amber-400 text-xs">star</span>
+<span class="font-bold text-slate-700 dark:text-slate-300">4.9</span>
+<span>• Tesla Model 3</span>
+</div>
+</div>
+<button class="bg-primary/20 p-2 rounded-full text-primary active:bg-primary active:text-white transition-colors">Пополнить</button>
+</div>
+</div>
+<!-- Card 3: Delivered (Recent) -->
+<div class="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm opacity-80">
+<div class="flex justify-between items-start mb-3">
+<div>
+<span class="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">Order #DX-8711</span>
+<h3 class="font-bold text-slate-900 dark:text-white">72 Wall St, Financial District</h3>
+</div>
+<span class="px-3 py-1 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 rounded-full text-[10px] font-bold flex items-center gap-1"><span class="material-symbols-outlined text-xs">check_circle</span> Доставлено</span>
+</div>
+<p class="text-xs text-slate-500 mt-2 italic">Оставлено на ресепшене 15 мин. назад</p>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 left-0 right-0 bg-white/90 dark:bg-slate-900/90 backdrop-blur-lg border-t border-slate-100 dark:border-slate-800 px-6 pt-3 pb-8 flex items-center justify-between">
+<a class="flex flex-col items-center gap-1 text-primary" href="#">
+<span class="material-symbols-outlined font-variation-settings-'FILL' 1">grid_view</span>
+<span class="text-[10px] font-bold">Дашборд</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">history</span>
+<span class="text-[10px] font-bold">История</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">support_agent</span>
+<span class="text-[10px] font-bold">Поддержка</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">account_circle</span>
+<span class="text-[10px] font-bold">Профиль</span>
+</a>
+</nav>
+<!-- Map Preview Placeholder (Contextual UI) -->
+<div class="fixed bottom-24 right-6 pointer-events-none">
+<div class="bg-primary text-background-dark p-3 rounded-full shadow-2xl animate-bounce pointer-events-auto cursor-pointer">
+<span class="material-symbols-outlined">map</span>
+</div>
+</div>
+</body></html>

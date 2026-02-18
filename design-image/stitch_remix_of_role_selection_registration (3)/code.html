@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>User Registration - Delivery App</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0df26c",
+                        "background-light": "#f5f8f7",
+                        "background-dark": "#102217",
+                        "error": "#ef4444"
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        .ios-shadow {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark min-h-screen flex justify-center">
+<!-- Mobile Container (iPhone Pro Max roughly) -->
+<div class="relative w-full max-w-[430px] min-h-screen bg-white dark:bg-background-dark flex flex-col overflow-hidden shadow-2xl">
+<!-- Top Bar / Navigation -->
+<div class="flex items-center px-4 pt-12 pb-4">
+<button class="flex items-center justify-center size-10 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+<span class="material-symbols-outlined text-[#111814] dark:text-white">arrow_back_ios_new</span>
+</button>
+<h2 class="text-[#111814] dark:text-white text-lg font-bold flex-1 text-center pr-10">Создать аккаунт</h2>
+</div>
+<!-- Hero Text -->
+<div class="px-6 pt-6 pb-2">
+<h1 class="text-[#111814] dark:text-white text-[32px] font-bold leading-tight tracking-tight">Join our delivery network</h1>
+<p class="text-gray-500 dark:text-gray-400 text-base mt-2">Зарегистрируйтесь как продавец или курьер, чтобы начать зарабатывать.</p>
+</div>
+<!-- Registration Form -->
+<form class="flex-1 px-6 pt-8 pb-12 space-y-5 overflow-y-auto">
+<!-- First Name Field (With Error State Example) -->
+<div class="space-y-2">
+<label class="block text-sm font-semibold text-[#111814] dark:text-gray-200">Имя</label>
+<input class="w-full h-14 px-4 rounded-xl border-2 border-error bg-white dark:bg-gray-900 text-[#111814] dark:text-white focus:ring-primary focus:border-primary transition-all placeholder:text-gray-400" placeholder="напр. Иван" type="text" value=""/>
+<p class="text-error text-xs font-medium flex items-center gap-1"><span class="material-symbols-outlined text-sm">error</span>Это поле обязательно для заполнения</p>
+</div>
+<!-- Last Name Field -->
+<div class="space-y-2">
+<label class="block text-sm font-semibold text-[#111814] dark:text-gray-200">Фамилия</label>
+<input class="w-full h-14 px-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-[#111814] dark:text-white focus:ring-primary focus:border-primary transition-all placeholder:text-gray-400" placeholder="напр. Иванов" type="text"/>
+</div>
+<!-- Date of Birth Field -->
+<div class="space-y-2">
+<label class="block text-sm font-semibold text-[#111814] dark:text-gray-200">Дата рождения</label>
+<div class="relative">
+<input class="w-full h-14 px-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-[#111814] dark:text-white focus:ring-primary focus:border-primary transition-all" type="date"/>
+<span class="absolute right-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-gray-400 pointer-events-none">calendar_month</span>
+</div>
+</div>
+<!-- Terms and Conditions -->
+<div class="flex items-start gap-3 pt-2">
+<div class="flex items-center h-6">
+<input class="size-5 rounded border-gray-300 dark:border-gray-700 text-primary focus:ring-primary transition-colors cursor-pointer" id="terms" name="terms" type="checkbox"/>
+</div>
+<label class="text-sm text-gray-600 dark:text-gray-400 leading-tight" for="terms">Я согласен с <a class="text-primary font-semibold hover:underline" href="#">Условиями обслуживания</a> и <a class="text-primary font-semibold hover:underline" href="#">Политикой конфиденциальности</a></label>
+</div>
+<!-- Action Button -->
+<div class="pt-6">
+<button class="w-full h-14 bg-primary text-[#102217] font-bold rounded-xl text-lg ios-shadow active:scale-[0.98] transition-all hover:bg-opacity-90" type="submit">Зарегистрироваться</button>
+</div>
+<!-- Footer Link -->
+<div class="text-center pt-4 pb-8">
+<p class="text-sm text-gray-500 dark:text-gray-400">Уже есть аккаунт? <a class="text-primary font-bold hover:underline ml-1" href="#">Войти</a></p>
+</div>
+</form>
+<!-- Bottom Indicator (iOS style) -->
+<div class="h-1.5 w-32 bg-gray-200 dark:bg-gray-800 rounded-full mx-auto mb-2 shrink-0"></div>
+</div>
+</body></html>

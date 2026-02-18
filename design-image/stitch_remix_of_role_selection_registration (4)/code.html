@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Courier Dashboard Map View</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0df26c",
+                        "background-light": "#f5f8f7",
+                        "background-dark": "#102217",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans"]
+                    },
+                    borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .map-gradient {
+            background: linear-gradient(180deg, rgba(245, 248, 247, 0.8) 0%, rgba(245, 248, 247, 0) 20%, rgba(245, 248, 247, 0) 80%, rgba(245, 248, 247, 0.9) 100%);
+        }
+        .order-sheet {
+            box-shadow: 0 -10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark antialiased">
+<!-- Main Mobile Container -->
+<div class="relative mx-auto h-screen max-w-[430px] overflow-hidden bg-white shadow-2xl flex flex-col">
+<!-- Top Status Bar (Floating) -->
+<div class="absolute top-0 left-0 right-0 z-20 p-4 pt-12">
+<div class="flex items-center justify-between gap-3">
+<!-- Profile & Stats -->
+<div class="flex items-center gap-2 bg-white/90 backdrop-blur-md p-1.5 pr-4 rounded-full shadow-lg border border-white/20">
+<div class="size-10 rounded-full bg-cover bg-center border-2 border-primary" data-alt="Courier profile photo smiling" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBwRBmrJy4b5WN40cpJsd2woKwnztQRS_-3d9bI55dO2DPobAT7zcKUDFO39xzPwCf95pGh6og6o_5Ohbyr1bBXixsupmiVCK1_b6D_34iqCLqoB8kydO44xeDqsm12oPnAJU1rOvHGxvCOC7Wd0FDi4ZILen05yD_IPiuDQlmkf0ExzuY0rleuu3Jzfs6-ftCvmxNaYBP_mNuuSMl08wOWUnFsyTD89jgyKBnNJiAw9ynKScJKCfv4M9hklym7cV60p9FKQQDqlWVu')"></div>
+<div class="flex flex-col">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-primary text-[14px] fill-1">stars</span>
+<span class="text-[13px] font-bold text-slate-900">98%</span>
+</div>
+<span class="text-[11px] font-medium text-slate-500">450 somoni</span>
+</div>
+</div>
+<!-- Online Toggle -->
+<div class="flex items-center bg-white/90 backdrop-blur-md p-1.5 px-3 rounded-full shadow-lg border border-white/20 gap-2">
+<span class="text-[13px] font-bold text-slate-900">В сети</span>
+<label class="relative flex h-[24px] w-[44px] cursor-pointer items-center rounded-full border-none bg-slate-200 p-0.5 has-[:checked]:justify-end has-[:checked]:bg-primary transition-all">
+<div class="h-full w-[20px] rounded-full bg-white shadow-sm"></div>
+<input checked="" class="invisible absolute" type="checkbox"/>
+</label>
+</div>
+<!-- Notifications -->
+<button class="size-10 flex items-center justify-center bg-white/90 backdrop-blur-md rounded-full shadow-lg border border-white/20">
+<span class="material-symbols-outlined text-slate-800">notifications</span>
+</button>
+</div>
+</div>
+<!-- Map Background -->
+<div class="absolute inset-0 z-0 bg-slate-100" data-location="Dushanbe city center" style="">
+<div class="w-full h-full bg-cover bg-center opacity-90" data-alt="Stylized map of a modern city with pins" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAPKuEcz_kysWr_wot1iAtZI1Azv7bu1yPXKJ_JoIH7SN6oxMv0BRXo6eM__KPsIXRELj9EXX_OiyuYUNo4KEgQfqlY2V4E7UJg5gDAYDCyNqhxx211IXWFNEi4Yd78dK66gfaqwK1G0-0UzZM1kF-DCqB2BrvwK1m_iWCtqANmg1769pdjsRsCg7luX3C6xVrUpsKjLTwHab53DMIylmfoHQxzcISqeBzhp1OjZ8bIRojilaOA7dlpRTnAT-kK0h0m-3PMrVQNKyNT')"></div>
+<div class="absolute inset-0 map-gradient pointer-events-none"></div>
+<!-- Map Markers -->
+<!-- Courier Current Location -->
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
+<div class="relative">
+<div class="absolute inset-0 animate-ping rounded-full bg-primary/40 scale-150"></div>
+<div class="relative size-6 rounded-full bg-white border-4 border-primary shadow-lg"></div>
+</div>
+</div>
+<!-- Order Pin 1 -->
+<div class="absolute top-[42%] left-[30%] animate-bounce">
+<div class="flex flex-col items-center">
+<div class="bg-black text-white text-[10px] font-bold px-2 py-0.5 rounded-full mb-1">15 som</div>
+<div class="size-8 rounded-full bg-primary flex items-center justify-center shadow-xl border-2 border-white">
+<span class="material-symbols-outlined text-white text-[18px]">local_mall</span>
+</div>
+</div>
+</div>
+<!-- Order Pin 2 -->
+<div class="absolute top-[55%] left-[65%]">
+<div class="flex flex-col items-center">
+<div class="bg-black text-white text-[10px] font-bold px-2 py-0.5 rounded-full mb-1">12 som</div>
+<div class="size-8 rounded-full bg-primary flex items-center justify-center shadow-xl border-2 border-white">
+<span class="material-symbols-outlined text-white text-[18px]">restaurant</span>
+</div>
+</div>
+</div>
+<!-- Map Controls -->
+<div class="absolute right-4 bottom-[320px] flex flex-col gap-2 z-10">
+<button class="size-12 bg-white rounded-full flex items-center justify-center shadow-lg text-slate-800">
+<span class="material-symbols-outlined">add</span>
+</button>
+<button class="size-12 bg-white rounded-full flex items-center justify-center shadow-lg text-slate-800">
+<span class="material-symbols-outlined">remove</span>
+</button>
+<button class="size-12 bg-primary rounded-full flex items-center justify-center shadow-lg text-white mt-2">
+<span class="material-symbols-outlined">my_location</span>
+</button>
+</div>
+</div>
+<!-- Bottom Sheet Orders -->
+<div class="absolute bottom-0 left-0 right-0 z-30 bg-white order-sheet rounded-t-3xl min-h-[300px] flex flex-col">
+<!-- Pull Handle -->
+<div class="w-full flex justify-center py-3">
+<div class="w-12 h-1.5 bg-slate-200 rounded-full"></div>
+</div>
+<!-- Header -->
+<div class="px-6 pb-4 border-b border-slate-100">
+<div class="flex items-center justify-between">
+<h2 class="text-xl font-bold text-slate-900">Доступные заказы</h2>
+<span class="bg-primary/20 text-primary px-3 py-1 rounded-full text-xs font-bold">5 рядом</span>
+</div>
+<p class="text-slate-500 text-sm mt-1">В радиусе 3 км от вас</p>
+</div>
+<!-- Scrollable Order List -->
+<div class="flex-1 overflow-y-auto px-4 py-4 space-y-3">
+<!-- Order Card 1 -->
+<div class="p-4 rounded-2xl bg-slate-50 border border-slate-100 flex items-center gap-4 active:scale-[0.98] transition-transform">
+<div class="size-14 bg-white rounded-xl flex items-center justify-center shadow-sm border border-slate-100">
+<span class="material-symbols-outlined text-primary text-3xl">restaurant</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start">
+<h3 class="font-bold text-slate-900">Burger House</h3>
+<span class="text-lg font-extrabold text-slate-900">15 som</span>
+</div>
+<div class="flex items-center gap-3 mt-1 text-xs text-slate-500 font-medium">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">near_me</span>
+                                0.5 km
+                            </div>
+<div class="flex items-center gap-1"><span class="material-symbols-outlined text-[14px] text-amber-400 fill-1">star</span> 4.9 Рейтинг</div>
+</div>
+</div>
+</div>
+<!-- Order Card 2 -->
+<div class="p-4 rounded-2xl bg-slate-50 border border-slate-100 flex items-center gap-4 active:scale-[0.98] transition-transform">
+<div class="size-14 bg-white rounded-xl flex items-center justify-center shadow-sm border border-slate-100">
+<span class="material-symbols-outlined text-primary text-3xl">local_mall</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start">
+<h3 class="font-bold text-slate-900">Green Market</h3>
+<span class="text-lg font-extrabold text-slate-900">20 som</span>
+</div>
+<div class="flex items-center gap-3 mt-1 text-xs text-slate-500 font-medium">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">near_me</span>
+                                1.8 km
+                            </div>
+<div class="flex items-center gap-1"><span class="material-symbols-outlined text-[14px] text-amber-400 fill-1">star</span> 4.7 Рейтинг</div>
+</div>
+</div>
+</div>
+<!-- Order Card 3 -->
+<div class="p-4 rounded-2xl bg-slate-50 border border-slate-100 flex items-center gap-4 active:scale-[0.98] transition-transform">
+<div class="size-14 bg-white rounded-xl flex items-center justify-center shadow-sm border border-slate-100">
+<span class="material-symbols-outlined text-primary text-3xl">local_pharmacy</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start">
+<h3 class="font-bold text-slate-900">City Pharma</h3>
+<span class="text-lg font-extrabold text-slate-900">12 som</span>
+</div>
+<div class="flex items-center gap-3 mt-1 text-xs text-slate-500 font-medium">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">near_me</span>
+                                2.2 km
+                            </div>
+<div class="flex items-center gap-1"><span class="material-symbols-outlined text-[14px] text-amber-400 fill-1">star</span> 5.0 Рейтинг</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom NavBar Component -->
+<div class="flex gap-2 border-t border-slate-100 bg-white px-4 pb-8 pt-3">
+<a class="flex flex-1 flex-col items-center justify-center gap-1 rounded-full text-primary" href="#">
+<div class="flex h-8 items-center justify-center">
+<span class="material-symbols-outlined fill-1">explore</span>
+</div>
+<p class="text-[11px] font-bold leading-normal">Обзор</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-slate-400" href="#">
+<div class="flex h-8 items-center justify-center">
+<span class="material-symbols-outlined">list_alt</span>
+</div>
+<p class="text-[11px] font-medium leading-normal">Заказы</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-slate-400" href="#">
+<div class="flex h-8 items-center justify-center">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+</div>
+<p class="text-[11px] font-medium leading-normal">Доход</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-slate-400" href="#">
+<div class="flex h-8 items-center justify-center">
+<span class="material-symbols-outlined">person</span>
+</div>
+<p class="text-[11px] font-medium leading-normal">Профиль</p>
+</a>
+</div>
+</div>
+</div>
+</body></html>

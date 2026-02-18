@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Notifications Center - Logistics App</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0df26c",
+                        "background-light": "#f5f8f7",
+                        "background-dark": "#102217",
+                        "financial": "#0df26c",
+                        "order": "#3b82f6",
+                        "system": "#f59e0b",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        .unread-glow {
+            background-color: rgba(13, 242, 108, 0.05);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100">
+<div class="max-w-md mx-auto bg-white dark:bg-slate-900 min-h-screen shadow-2xl flex flex-col relative overflow-hidden">
+<!-- Header Section -->
+<header class="sticky top-0 z-10 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-100 dark:border-slate-800">
+<div class="flex items-center justify-between px-6 py-4 mt-8">
+<h1 class="text-2xl font-bold tracking-tight">Уведомления</h1>
+<button class="text-primary text-sm font-semibold hover:opacity-80 transition-opacity">Прочитать все</button>
+</div>
+<!-- Filter Categories -->
+<div class="flex gap-2 overflow-x-auto px-6 pb-4 no-scrollbar">
+<button class="flex h-9 shrink-0 items-center justify-center rounded-full bg-primary px-5 text-sm font-semibold text-slate-900 shadow-sm">Все</button>
+<button class="flex h-9 shrink-0 items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800 px-5 text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-200 transition-colors">Финансы</button>
+<button class="flex h-9 shrink-0 items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800 px-5 text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-200 transition-colors">Заказы</button>
+<button class="flex h-9 shrink-0 items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800 px-5 text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-200 transition-colors">Система</button>
+</div>
+</header>
+<!-- Notification List -->
+<main class="flex-1 overflow-y-auto">
+<!-- Unread: Financial -->
+<div class="group relative flex gap-4 px-6 py-5 unread-glow border-b border-slate-50 dark:border-slate-800/50 transition-colors hover:bg-slate-50/80 dark:hover:bg-slate-800/30">
+<div class="relative flex-shrink-0">
+<div class="flex h-12 w-12 items-center justify-center rounded-xl bg-financial/20 text-financial">
+<span class="material-symbols-outlined text-[28px]">account_balance_wallet</span>
+</div>
+<!-- Unread Dot Indicator -->
+<div class="absolute -top-1 -right-1 h-3 w-3 rounded-full border-2 border-white dark:border-slate-900 bg-primary"></div>
+</div>
+<div class="flex flex-col flex-1 min-w-0">
+<div class="flex items-center justify-between mb-1">
+<h3 class="text-[15px] font-bold text-slate-900 dark:text-white truncate">Выплата успешна</h3>
+<span class="text-xs font-medium text-slate-400">2м назад</span>
+</div>
+<p class="text-sm text-slate-600 dark:text-slate-400 leading-snug line-clamp-2">Ваш еженедельный заработок в размере $1 240,50 был успешно переведен на ваш привязанный банковский счет, оканчивающийся на **42.</p>
+</div>
+</div>
+<!-- Unread: Order Update -->
+<div class="group relative flex gap-4 px-6 py-5 unread-glow border-b border-slate-50 dark:border-slate-800/50 transition-colors hover:bg-slate-50/80 dark:hover:bg-slate-800/30">
+<div class="relative flex-shrink-0">
+<div class="flex h-12 w-12 items-center justify-center rounded-xl bg-order/20 text-order">
+<span class="material-symbols-outlined text-[28px]">local_shipping</span>
+</div>
+<div class="absolute -top-1 -right-1 h-3 w-3 rounded-full border-2 border-white dark:border-slate-900 bg-primary"></div>
+</div>
+<div class="flex flex-col flex-1 min-w-0">
+<div class="flex items-center justify-between mb-1">
+<h3 class="text-[15px] font-bold text-slate-900 dark:text-white truncate">Курьер прибыл</h3>
+<span class="text-xs font-medium text-slate-400">15м назад</span>
+</div>
+<p class="text-sm text-slate-600 dark:text-slate-400 leading-snug line-clamp-2">Иван Иванов прибыл в пункт выдачи заказа #LX-8829. Пожалуйста, подготовьте посылку к передаче.</p>
+</div>
+</div>
+<!-- Read: System Update -->
+<div class="group relative flex gap-4 px-6 py-5 bg-white dark:bg-slate-900 border-b border-slate-50 dark:border-slate-800/50 transition-colors hover:bg-slate-50/80 dark:hover:bg-slate-800/30">
+<div class="flex-shrink-0">
+<div class="flex h-12 w-12 items-center justify-center rounded-xl bg-system/20 text-system">
+<span class="material-symbols-outlined text-[28px]">stars</span>
+</div>
+</div>
+<div class="flex flex-col flex-1 min-w-0">
+<div class="flex items-center justify-between mb-1">
+<h3 class="text-[15px] font-bold text-slate-900 dark:text-white truncate">Рейтинг обновлен</h3>
+<span class="text-xs font-medium text-slate-400">1ч назад</span>
+</div>
+<p class="text-sm text-slate-500 dark:text-slate-500 leading-snug line-clamp-2">Ваш показатель эффективности вырос до 4,9 звезд. Продолжайте в том же духе!</p>
+</div>
+</div>
+<!-- Read: Financial -->
+<div class="group relative flex gap-4 px-6 py-5 bg-white dark:bg-slate-900 border-b border-slate-50 dark:border-slate-800/50 transition-colors hover:bg-slate-50/80 dark:hover:bg-slate-800/30">
+<div class="flex-shrink-0">
+<div class="flex h-12 w-12 items-center justify-center rounded-xl bg-financial/20 text-financial">
+<span class="material-symbols-outlined text-[28px]">payments</span>
+</div>
+</div>
+<div class="flex flex-col flex-1 min-w-0">
+<div class="flex items-center justify-between mb-1">
+<h3 class="text-[15px] font-bold text-slate-900 dark:text-white truncate">Возврат оформлен</h3>
+<span class="text-xs font-medium text-slate-400">3ч назад</span>
+</div>
+<p class="text-sm text-slate-500 dark:text-slate-500 leading-snug line-clamp-2">Возврат в размере $42,00 был оформлен по заказу #LX-8761 из-за отмены клиентом.</p>
+</div>
+</div>
+<!-- Read: Order Update -->
+<div class="group relative flex gap-4 px-6 py-5 bg-white dark:bg-slate-900 border-b border-slate-50 dark:border-slate-800/50 transition-colors hover:bg-slate-50/80 dark:hover:bg-slate-800/30">
+<div class="flex-shrink-0">
+<div class="flex h-12 w-12 items-center justify-center rounded-xl bg-order/20 text-order">
+<span class="material-symbols-outlined text-[28px]">inventory_2</span>
+</div>
+</div>
+<div class="flex flex-col flex-1 min-w-0">
+<div class="flex items-center justify-between mb-1">
+<h3 class="text-[15px] font-bold text-slate-900 dark:text-white truncate">Доставка подтверждена</h3>
+<span class="text-xs font-medium text-slate-400">Вчера</span>
+</div>
+<p class="text-sm text-slate-500 dark:text-slate-500 leading-snug line-clamp-2">Заказ #LX-8810 был успешно доставлен клиенту в 12:45.</p>
+</div>
+</div>
+<!-- Read: System Update -->
+<div class="group relative flex gap-4 px-6 py-5 bg-white dark:bg-slate-900 border-b border-slate-50 dark:border-slate-800/50 transition-colors hover:bg-slate-50/80 dark:hover:bg-slate-800/30">
+<div class="flex-shrink-0">
+<div class="flex h-12 w-12 items-center justify-center rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-500">
+<span class="material-symbols-outlined text-[28px]">info</span>
+</div>
+</div>
+<div class="flex flex-col flex-1 min-w-0">
+<div class="flex items-center justify-between mb-1">
+<h3 class="text-[15px] font-bold text-slate-900 dark:text-white truncate">График на праздники</h3>
+<span class="text-xs font-medium text-slate-400">Вчера</span>
+</div>
+<p class="text-sm text-slate-500 dark:text-slate-500 leading-snug line-clamp-2">Ознакомьтесь с обновленным графиком доставки на предстоящие праздничные выходные в вашем районе.</p>
+</div>
+</div>
+<div class="h-24"></div> <!-- Spacer for Bottom Nav -->
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="absolute bottom-0 left-0 right-0 bg-white/95 dark:bg-slate-900/95 backdrop-blur-lg border-t border-slate-100 dark:border-slate-800 px-6 pt-2 pb-6">
+<div class="flex justify-between items-center max-w-sm mx-auto">
+<a class="flex flex-col items-center gap-1 group" href="#">
+<div class="text-slate-400 group-hover:text-primary transition-colors">
+<span class="material-symbols-outlined">home</span>
+</div>
+<span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 group-hover:text-primary transition-colors">Главная</span>
+</a>
+<a class="flex flex-col items-center gap-1 group" href="#">
+<div class="text-slate-400 group-hover:text-primary transition-colors">
+<span class="material-symbols-outlined">package_2</span>
+</div>
+<span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 group-hover:text-primary transition-colors">Заказы</span>
+</a>
+<a class="flex flex-col items-center gap-1" href="#">
+<div class="text-primary relative">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">notifications</span>
+<div class="absolute -top-1 -right-1 h-2 w-2 rounded-full bg-primary animate-pulse"></div>
+</div>
+<span class="text-[10px] font-bold uppercase tracking-wider text-primary">Уведомления</span>
+</a>
+<a class="flex flex-col items-center gap-1 group" href="#">
+<div class="text-slate-400 group-hover:text-primary transition-colors">
+<span class="material-symbols-outlined">account_circle</span>
+</div>
+<span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 group-hover:text-primary transition-colors">Профиль</span>
+</a>
+</div>
+</nav>
+<!-- iOS Home Indicator -->
+<div class="absolute bottom-1.5 left-1/2 -translate-x-1/2 w-32 h-1.5 bg-slate-200 dark:bg-slate-700 rounded-full"></div>
+</div>
+</body></html>

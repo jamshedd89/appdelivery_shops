@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Выбор роли и регистрация</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0df26c",
+                        "background-light": "#f5f8f7",
+                        "background-dark": "#102217",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        .role-card-active {
+            border: 2px solid #0df26c;
+            background-color: rgba(13, 242, 108, 0.05);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-[#111814] dark:text-white transition-colors duration-300">
+<!-- Main Container -->
+<div class="relative flex min-h-screen w-full flex-col max-w-[430px] mx-auto bg-white dark:bg-background-dark shadow-2xl overflow-x-hidden">
+<!-- Top App Bar -->
+<div class="flex items-center bg-white dark:bg-background-dark p-4 pb-2 justify-between sticky top-0 z-10">
+<div class="text-[#111814] dark:text-white flex size-12 shrink-0 items-center justify-center rounded-full hover:bg-primary/10 transition-colors cursor-pointer" data-icon="ArrowLeft">
+<span class="material-symbols-outlined">arrow_back</span>
+</div>
+<h2 class="text-[#111814] dark:text-white text-lg font-bold leading-tight tracking-[-0.015em] flex-1 text-center pr-12">Начать</h2>
+</div>
+<!-- Header Section -->
+<div class="px-6 pt-8 pb-4">
+<h1 class="text-[#111814] dark:text-white tracking-tight text-[32px] font-bold leading-tight text-left">Выберите роль</h1>
+<p class="text-[#111814]/70 dark:text-white/70 text-base font-normal leading-normal mt-2">Выберите, как вы хотите использовать приложение.</p>
+</div>
+<!-- Role Selection Grid -->
+<div class="grid grid-cols-1 gap-4 p-6">
+<!-- Seller Role Card (Active State Example) -->
+<div class="flex flex-col gap-4 p-5 rounded-xl border-2 border-primary bg-primary/5 dark:bg-primary/10 relative overflow-hidden group cursor-pointer">
+<div class="flex justify-between items-start">
+<div class="p-3 bg-primary rounded-full text-white">
+<span class="material-symbols-outlined text-2xl">storefront</span>
+</div>
+<div class="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-white">
+<span class="material-symbols-outlined text-sm">check</span>
+</div>
+</div>
+<div class="mt-2">
+<h3 class="text-[#111814] dark:text-white text-xl font-bold leading-tight">Стать Продавцом</h3>
+<p class="text-[#111814]/60 dark:text-white/60 text-sm font-medium mt-1">Управляйте товарами, развивайте бизнес и находите быструю доставку.</p>
+</div>
+<div class="w-full bg-center bg-no-repeat aspect-[16/7] bg-cover rounded-lg mt-2" data-alt="Modern shop owner organizing packages in a clean retail space" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDdelGnFBAatmndwUmwmYk2UMMp4asw1uTA1Gi-DewZBfJkVF-smfmTSYyR5B14jh7u3ros7pLzJFl1JttkOq357XLdUWPwlYQTVnuk1sERLSmOpNbUR3bCNMoUkXMtavO97szatNdaKWC1tAmx3NCJJa_NAZSp6CXztZp82qGw7KeAyfGK_3SOhQI-Jv7r_8vohgmXG0QLiGS0QqJThfiy47Zmb8zIqaEgRLznslRmm8saKhXIXEzGZJcH_EHBsEZscDVmhBqdFV9-");'>
+</div>
+</div>
+<!-- Courier Role Card -->
+<div class="flex flex-col gap-4 p-5 rounded-xl border-2 border-transparent bg-background-light dark:bg-white/5 hover:border-primary/50 transition-all cursor-pointer">
+<div class="flex justify-between items-start">
+<div class="p-3 bg-background-light dark:bg-white/10 rounded-full text-[#111814] dark:text-white">
+<span class="material-symbols-outlined text-2xl">delivery_dining</span>
+</div>
+</div>
+<div class="mt-2">
+<h3 class="text-[#111814] dark:text-white text-xl font-bold leading-tight">Стать Курьером</h3>
+<p class="text-[#111814]/60 dark:text-white/60 text-sm font-medium mt-1">Зарабатывайте на своих условиях с гибким графиком и выплатами.</p>
+</div>
+<div class="w-full bg-center bg-no-repeat aspect-[16/7] bg-cover rounded-lg mt-2 opacity-80" data-alt="A happy delivery rider on a scooter with a green backpack" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAeP_K6lGOe66CVbCK5KBJOeY6L7hwLPh1AdfE5jlOzbfGsye5379Vx994VoCMEsW946CKf49-ier_HLOrE07fUcR8PXT4t7lYwKjnYNPdFz-1L0yxU-ImWmN_BXvbekYhCDJ29fOmPRRwSruy_e3EOB7bgYLjX_2Z75CBI3AvZIYJlu1y740Ce42i_tX5-RXr6Xueldtfat0nvlcbgRvzqPmYZ_owWvVBEluMcHyGryLAH7gZ0EG2vfZYSrbmDpb_5rPiDvEeQQyQu");'>
+</div>
+</div>
+</div>
+<!-- Authorization Section -->
+<div class="mt-auto px-6 pb-10 pt-4 bg-white dark:bg-background-dark border-t border-background-light dark:border-white/5 rounded-t-xl shadow-[0_-10px_30px_rgba(0,0,0,0.05)]">
+<h3 class="text-[#111814] dark:text-white text-lg font-bold leading-tight tracking-[-0.015em] mb-4">Регистрация</h3>
+<div class="flex flex-col gap-4">
+<div class="relative group">
+<div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none text-[#111814]/50 dark:text-white/50">
+<span class="material-symbols-outlined text-xl">phone_iphone</span>
+</div>
+<input class="block w-full rounded-full border-none bg-background-light dark:bg-white/5 py-4 pl-12 pr-4 text-[#111814] dark:text-white ring-1 ring-inset ring-transparent focus:ring-2 focus:ring-primary outline-none transition-all font-medium" placeholder="+1 (555) 000-0000" type="tel"/>
+<div class="absolute inset-y-0 right-4 flex items-center">
+<span class="text-xs font-bold text-primary px-2 py-1 bg-primary/10 rounded-full">US</span>
+</div>
+</div>
+<p class="text-[#111814]/50 dark:text-white/50 text-[11px] font-normal leading-normal px-2">Продолжая, вы соглашаетесь с <a class="text-primary hover:underline" href="#">Условиями</a> и <a class="text-primary hover:underline" href="#">Политикой конфиденциальности</a>. Мы отправим вам одноразовый SMS-код.</p>
+<button class="w-full bg-primary hover:bg-primary/90 text-[#102217] font-bold py-4 rounded-full transition-transform active:scale-[0.98] flex items-center justify-center gap-2 mt-2 shadow-lg shadow-primary/20">
+<span>Продолжить</span>
+<span class="material-symbols-outlined text-lg">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Bottom Safe Area Spacer -->
+<div class="h-8 bg-white dark:bg-background-dark"></div>
+</div>
+</body></html>

@@ -6,6 +6,7 @@ import MapView, { Marker, Polyline } from 'react-native-maps';
 import Button from '../../components/Button';
 import StarRating from '../../components/StarRating';
 import CancelReasonModal from '../../components/CancelReasonModal';
+import ReviewModal from '../../components/ReviewModal';
 import useAuthStore from '../../store/authStore';
 import useOrderStore from '../../store/orderStore';
 import { ordersApi, reviewsApi } from '../../services/api';
@@ -34,8 +35,9 @@ export default function OrderDetailScreen({ route, navigation }) {
   const { updateOrderStatus, confirmDelivery, cancelBySeller } = useOrderStore();
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [stars, setStars] = useState(0);
   const [cancelModalVisible, setCancelModalVisible] = useState(false);
+  const [reviewModalVisible, setReviewModalVisible] = useState(false);
+  const [hasReviewed, setHasReviewed] = useState(false);
   const [courierLocation, setCourierLocation] = useState(null);
   const socketRef = useRef(null);
 
@@ -98,10 +100,10 @@ export default function OrderDetailScreen({ route, navigation }) {
     } catch (e) { Alert.alert('Ошибка', e.response?.data?.message || 'Ошибка'); }
   };
 
-  const doReview = async () => {
-    if (!stars) { Alert.alert('Ошибка', 'Выберите оценку'); return; }
-    try { await reviewsApi.create(orderId, { stars }); Alert.alert('Спасибо!', 'Отзыв отправлен'); setStars(0); }
-    catch (e) { Alert.alert('Ошибка', e.response?.data?.message || 'Ошибка'); }
+  const getTargetUser = () => {
+    if (isSeller && order.courier) return order.courier;
+    if (isCourier && order.seller) return order.seller;
+    return null;
   };
 
   if (loading || !order) return (
@@ -172,7 +174,7 @@ export default function OrderDetailScreen({ route, navigation }) {
         <View style={styles.card}>
           <Text style={styles.cardTitle}>Курьер</Text>
           <View style={styles.courierInfo}>
-            <LinearGradient colors={['#7C3AED', '#6D28D9']} style={styles.courierAvatar}>
+            <LinearGradient colors={COLORS.gradient.primary} style={styles.courierAvatar}>
               <Ionicons name={TRANSPORT_ICONS[order.courier?.courierProfile?.transport_type] || 'person'} size={22} color={COLORS.white} />
             </LinearGradient>
             <View style={{ flex: 1 }}>
@@ -237,15 +239,28 @@ export default function OrderDetailScreen({ route, navigation }) {
       </View>
 
       {/* Review */}
-      {(order.status === 'confirmed' || order.status === 'completed') && (
-        <View style={styles.card}>
-          <Text style={styles.cardTitle}>Оставить отзыв</Text>
-          <View style={styles.reviewStars}>
-            <StarRating rating={stars} interactive size={36} onRate={setStars} />
-          </View>
-          <Button title="Отправить отзыв" onPress={doReview} disabled={!stars} />
+      {(order.status === 'confirmed' || order.status === 'completed') && !hasReviewed && getTargetUser() && (
+        <Button
+          title="Оставить отзыв"
+          onPress={() => setReviewModalVisible(true)}
+          icon={<Ionicons name="star-outline" size={20} color={COLORS.dark} />}
+          style={{ marginBottom: 14 }}
+          size="large"
+        />
+      )}
+      {hasReviewed && (
+        <View style={[styles.card, { alignItems: 'center' }]}>
+          <Ionicons name="checkmark-circle" size={32} color={COLORS.success} />
+          <Text style={{ fontSize: 15, fontWeight: '600', color: COLORS.success, marginTop: 8 }}>Отзыв отправлен</Text>
         </View>
       )}
+      <ReviewModal
+        visible={reviewModalVisible}
+        onClose={() => setReviewModalVisible(false)}
+        orderId={orderId}
+        targetUser={getTargetUser()}
+        onSuccess={() => { setHasReviewed(true); load(); }}
+      />
       {/* Cancel reason modal */}
       <CancelReasonModal
         visible={cancelModalVisible}

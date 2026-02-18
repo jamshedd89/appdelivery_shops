@@ -2,14 +2,16 @@ import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Ionicons } from '@expo/vector-icons';
-import { View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import CourierHomeScreen from '../screens/courier/CourierHomeScreen';
 import CourierOrdersScreen from '../screens/courier/CourierOrdersScreen';
 import OrderDetailScreen from '../screens/shared/OrderDetailScreen';
 import ProfileScreen from '../screens/shared/ProfileScreen';
 import ChatScreen from '../screens/shared/ChatScreen';
-import { COLORS, SHADOWS } from '../utils/constants';
+import WalletScreen from '../screens/shared/WalletScreen';
+import NotificationsScreen from '../screens/shared/NotificationsScreen';
+import LegalScreen from '../screens/shared/LegalScreen';
+import { COLORS } from '../utils/constants';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -29,6 +31,8 @@ function AvailableStack() {
       <Stack.Screen name="CourierHome" component={CourierHomeScreen} options={{ headerShown: false }} />
       <Stack.Screen name="OrderDetail" component={OrderDetailScreen} options={{ title: 'Детали заказа' }} />
       <Stack.Screen name="Chat" component={ChatScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="Notifications" component={NotificationsScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="Legal" component={LegalScreen} options={{ headerShown: false }} />
     </Stack.Navigator>
   );
 }
@@ -43,45 +47,43 @@ function MyOrdersStack() {
   );
 }
 
+function ProfileStack() {
+  return (
+    <Stack.Navigator screenOptions={stackOptions}>
+      <Stack.Screen name="ProfileMain" component={ProfileScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="Legal" component={LegalScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="Notifications" component={NotificationsScreen} options={{ headerShown: false }} />
+    </Stack.Navigator>
+  );
+}
+
 export default function CourierNavigator() {
   const insets = useSafeAreaInsets();
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color }) => {
-          const iconMap = { Available: 'map', CourierOrders: 'cube', Profile: 'person' };
-          const name = iconMap[route.name] || 'ellipse';
-          return (
-            <View style={focused ? styles.activeTab : undefined}>
-              <Ionicons name={focused ? name : `${name}-outline`} size={22} color={color} />
-            </View>
-          );
+          const icons = { Available: 'compass', CourierOrders: 'list', Earnings: 'wallet', Profile: 'person' };
+          const name = icons[route.name] || 'ellipse';
+          return <Ionicons name={focused ? name : `${name}-outline`} size={24} color={color} />;
         },
-        tabBarActiveTintColor: COLORS.secondary,
+        tabBarActiveTintColor: COLORS.primary,
         tabBarInactiveTintColor: COLORS.textMuted,
-        tabBarLabelStyle: { fontSize: 12, fontWeight: '600' },
+        tabBarLabelStyle: { fontSize: 10, fontWeight: '700' },
         tabBarStyle: {
           backgroundColor: COLORS.white,
-          borderTopWidth: 0,
-          paddingBottom: Math.max(insets.bottom, 6),
+          borderTopWidth: 1,
+          borderTopColor: COLORS.borderLight,
+          paddingBottom: Math.max(insets.bottom, 8),
           paddingTop: 6,
-          ...SHADOWS.medium,
         },
         headerShown: false,
       })}
     >
-      <Tab.Screen name="Available" component={AvailableStack} options={{ title: 'Заявки' }} />
-      <Tab.Screen name="CourierOrders" component={MyOrdersStack} options={{ title: 'Мои' }} />
-      <Tab.Screen name="Profile" component={ProfileScreen} options={{ title: 'Профиль' }} />
+      <Tab.Screen name="Available" component={AvailableStack} options={{ title: 'Обзор' }} />
+      <Tab.Screen name="CourierOrders" component={MyOrdersStack} options={{ title: 'Заказы' }} />
+      <Tab.Screen name="Earnings" component={WalletScreen} options={{ title: 'Кошелёк' }} />
+      <Tab.Screen name="Profile" component={ProfileStack} options={{ title: 'Профиль' }} />
     </Tab.Navigator>
   );
 }
-
-const styles = {
-  activeTab: {
-    backgroundColor: '#F3E8FF',
-    borderRadius: 12,
-    padding: 6,
-    marginBottom: -4,
-  },
-};

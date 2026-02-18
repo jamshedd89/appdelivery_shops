@@ -1,145 +1,151 @@
-import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { COLORS, SHADOWS } from '../../utils/constants';
-
-const { width } = Dimensions.get('window');
+import { COLORS } from '../../utils/constants';
 
 export default function RoleSelectScreen({ navigation }) {
+  const [selected, setSelected] = useState('seller');
+
+  const handleContinue = () => {
+    navigation.navigate('Login', { role: selected });
+  };
+
   return (
     <View style={styles.container}>
-      <LinearGradient
-        colors={COLORS.gradient.primary}
-        start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}
-        style={styles.header}
-      >
-        <View style={styles.logoWrap}>
-          <Ionicons name="cube" size={36} color={COLORS.white} />
-        </View>
-        <Text style={styles.logo}>AppDelivery</Text>
-        <Text style={styles.subtitle}>Быстрая доставка по городу</Text>
-      </LinearGradient>
+      {/* Top bar */}
+      <View style={styles.topBar}>
+        <View style={{ width: 48 }} />
+        <Text style={styles.topTitle}>Начать</Text>
+        <View style={{ width: 48 }} />
+      </View>
 
-      <View style={styles.content}>
+      <ScrollView contentContainerStyle={styles.scroll}>
+        {/* Header */}
         <Text style={styles.title}>Выберите роль</Text>
-        <Text style={styles.desc}>Как вы хотите использовать приложение?</Text>
+        <Text style={styles.subtitle}>Выберите, как вы хотите использовать приложение.</Text>
 
+        {/* Role cards */}
         <TouchableOpacity
-          style={styles.card}
-          onPress={() => navigation.navigate('Login', { role: 'seller' })}
-          activeOpacity={0.7}
+          style={[styles.roleCard, selected === 'seller' && styles.roleCardActive]}
+          onPress={() => setSelected('seller')}
+          activeOpacity={0.8}
         >
-          <View style={[styles.iconWrap, { backgroundColor: COLORS.primaryGhost }]}>
-            <Ionicons name="storefront" size={32} color={COLORS.primary} />
+          <View style={styles.roleCardTop}>
+            <View style={[styles.roleIcon, selected === 'seller' && styles.roleIconActive]}>
+              <Ionicons name="storefront" size={24} color={selected === 'seller' ? COLORS.white : COLORS.text} />
+            </View>
+            {selected === 'seller' && (
+              <View style={styles.checkCircle}>
+                <Ionicons name="checkmark" size={14} color={COLORS.white} />
+              </View>
+            )}
           </View>
-          <View style={styles.cardText}>
-            <Text style={styles.cardTitle}>Продавец</Text>
-            <Text style={styles.cardDesc}>Создавайте заявки на доставку товаров покупателям</Text>
-          </View>
-          <Ionicons name="chevron-forward" size={22} color={COLORS.textMuted} />
+          <Text style={styles.roleTitle}>Стать Продавцом</Text>
+          <Text style={styles.roleDesc}>Управляйте товарами, развивайте бизнес и находите быструю доставку.</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
-          style={styles.card}
-          onPress={() => navigation.navigate('Login', { role: 'courier' })}
-          activeOpacity={0.7}
+          style={[styles.roleCard, selected === 'courier' && styles.roleCardActive]}
+          onPress={() => setSelected('courier')}
+          activeOpacity={0.8}
         >
-          <View style={[styles.iconWrap, { backgroundColor: '#F3E8FF' }]}>
-            <Ionicons name="bicycle" size={32} color={COLORS.secondary} />
+          <View style={styles.roleCardTop}>
+            <View style={[styles.roleIcon, selected === 'courier' && styles.roleIconActive]}>
+              <Ionicons name="bicycle" size={24} color={selected === 'courier' ? COLORS.white : COLORS.text} />
+            </View>
+            {selected === 'courier' && (
+              <View style={styles.checkCircle}>
+                <Ionicons name="checkmark" size={14} color={COLORS.white} />
+              </View>
+            )}
           </View>
-          <View style={styles.cardText}>
-            <Text style={styles.cardTitle}>Курьер</Text>
-            <Text style={styles.cardDesc}>Доставляйте заказы и зарабатывайте каждый день</Text>
-          </View>
-          <Ionicons name="chevron-forward" size={22} color={COLORS.textMuted} />
+          <Text style={styles.roleTitle}>Стать Курьером</Text>
+          <Text style={styles.roleDesc}>Зарабатывайте на своих условиях с гибким графиком и выплатами.</Text>
         </TouchableOpacity>
+      </ScrollView>
+
+      {/* Bottom section */}
+      <View style={styles.bottomSection}>
+        <TouchableOpacity style={styles.continueBtn} onPress={handleContinue} activeOpacity={0.9}>
+          <Text style={styles.continueBtnText}>Продолжить</Text>
+          <Ionicons name="arrow-forward" size={18} color={COLORS.dark} />
+        </TouchableOpacity>
+
+        <Text style={styles.termsText}>
+          Продолжая, вы соглашаетесь с{' '}
+          <Text style={styles.termsLink}>Условиями</Text> и{' '}
+          <Text style={styles.termsLink}>Политикой конфиденциальности</Text>
+        </Text>
       </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: COLORS.background,
+  container: { flex: 1, backgroundColor: COLORS.white },
+
+  topBar: {
+    flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
+    paddingHorizontal: 16, paddingTop: 52, paddingBottom: 8,
   },
-  header: {
-    paddingTop: 80,
-    paddingBottom: 50,
-    alignItems: 'center',
-    borderBottomLeftRadius: 32,
-    borderBottomRightRadius: 32,
-  },
-  logoWrap: {
-    width: 72,
-    height: 72,
-    borderRadius: 22,
-    backgroundColor: 'rgba(255,255,255,0.2)',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 16,
-  },
-  logo: {
-    fontSize: 30,
-    fontWeight: '800',
-    color: COLORS.white,
+  topTitle: { fontSize: 18, fontWeight: '700', color: COLORS.text },
+
+  scroll: { paddingHorizontal: 24, paddingTop: 24, paddingBottom: 20 },
+
+  title: {
+    fontSize: 32, fontWeight: '800', color: COLORS.text,
     letterSpacing: -0.5,
   },
   subtitle: {
-    fontSize: 15,
-    color: 'rgba(255,255,255,0.8)',
-    marginTop: 6,
-    fontWeight: '500',
+    fontSize: 15, color: COLORS.textSecondary,
+    marginTop: 8, marginBottom: 28, lineHeight: 22,
   },
-  content: {
-    flex: 1,
-    padding: 24,
-    paddingTop: 32,
+
+  roleCard: {
+    borderWidth: 2, borderColor: 'transparent',
+    backgroundColor: COLORS.background,
+    borderRadius: 16, padding: 20, marginBottom: 16,
   },
-  title: {
-    fontSize: 24,
-    fontWeight: '800',
-    color: COLORS.text,
-    letterSpacing: -0.3,
+  roleCardActive: {
+    borderColor: COLORS.primary,
+    backgroundColor: COLORS.primaryGhost,
   },
-  desc: {
-    fontSize: 15,
-    color: COLORS.textSecondary,
-    marginTop: 6,
-    marginBottom: 28,
+  roleCardTop: {
+    flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start',
+    marginBottom: 12,
   },
-  card: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: COLORS.card,
-    borderRadius: 20,
-    padding: 20,
-    marginBottom: 14,
-    borderWidth: 1,
-    borderColor: COLORS.borderLight,
-    ...SHADOWS.medium,
+  roleIcon: {
+    width: 48, height: 48, borderRadius: 24,
+    backgroundColor: COLORS.background,
+    justifyContent: 'center', alignItems: 'center',
   },
-  iconWrap: {
-    width: 60,
-    height: 60,
-    borderRadius: 18,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 16,
+  roleIconActive: { backgroundColor: COLORS.primary },
+  checkCircle: {
+    width: 24, height: 24, borderRadius: 12,
+    backgroundColor: COLORS.primary,
+    justifyContent: 'center', alignItems: 'center',
   },
-  cardText: {
-    flex: 1,
+  roleTitle: { fontSize: 20, fontWeight: '700', color: COLORS.text, marginBottom: 4 },
+  roleDesc: { fontSize: 14, color: COLORS.textSecondary, lineHeight: 20 },
+
+  bottomSection: {
+    paddingHorizontal: 24, paddingBottom: 40, paddingTop: 16,
+    backgroundColor: COLORS.white, borderTopWidth: 1,
+    borderTopColor: COLORS.borderLight, borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    shadowColor: '#000', shadowOffset: { width: 0, height: -6 },
+    shadowOpacity: 0.05, shadowRadius: 20, elevation: 8,
   },
-  cardTitle: {
-    fontSize: 17,
-    fontWeight: '700',
-    color: COLORS.text,
-    marginBottom: 4,
+  continueBtn: {
+    flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8,
+    backgroundColor: COLORS.primary, paddingVertical: 18, borderRadius: 9999,
+    shadowColor: COLORS.primary, shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2, shadowRadius: 12, elevation: 4, marginBottom: 16,
   },
-  cardDesc: {
-    fontSize: 13,
-    color: COLORS.textSecondary,
-    lineHeight: 18,
+  continueBtnText: { fontSize: 17, fontWeight: '700', color: COLORS.dark },
+
+  termsText: {
+    fontSize: 11, color: COLORS.textMuted, textAlign: 'center', lineHeight: 16,
   },
+  termsLink: { color: COLORS.primary, fontWeight: '600' },
 });

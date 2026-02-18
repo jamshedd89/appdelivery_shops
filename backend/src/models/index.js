@@ -9,6 +9,7 @@ const Review = require('./Review');
 const Transaction = require('./Transaction');
 const SmsCode = require('./SmsCode');
 const Message = require('./Message');
+const Notification = require('./Notification');
 
 // User <-> Profiles
 User.hasOne(SellerProfile, { foreignKey: 'user_id', as: 'sellerProfile' });
@@ -49,7 +50,11 @@ Message.belongsTo(Order, { foreignKey: 'order_id', as: 'order' });
 User.hasMany(Message, { foreignKey: 'sender_id', as: 'sentMessages' });
 Message.belongsTo(User, { foreignKey: 'sender_id', as: 'sender' });
 
+// Notifications
+User.hasMany(Notification, { foreignKey: 'user_id', as: 'notifications' });
+Notification.belongsTo(User, { foreignKey: 'user_id', as: 'user' });
+
 module.exports = {
   sequelize, User, SellerProfile, SellerAddress, CourierProfile,
-  Order, OrderItem, Review, Transaction, SmsCode, Message,
+  Order, OrderItem, Review, Transaction, SmsCode, Message, Notification,
 };

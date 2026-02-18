@@ -1,6 +1,5 @@
 import React from 'react';
 import { TouchableOpacity, Text, StyleSheet, ActivityIndicator, View } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
 import { COLORS, SHADOWS } from '../utils/constants';
 
 export default function Button({
@@ -14,6 +13,7 @@ export default function Button({
 
   const py = size === 'small' ? 10 : size === 'large' ? 18 : 14;
   const fs = size === 'small' ? 14 : size === 'large' ? 17 : 15;
+  const radius = size === 'large' ? 9999 : 14;
 
   if (isOutline || isGhost || isDanger) {
     const bg = isDanger ? COLORS.dangerLight : isGhost ? 'transparent' : COLORS.primaryGhost;
@@ -22,7 +22,7 @@ export default function Button({
     const bc = isDanger ? 'transparent' : COLORS.primary + '30';
     return (
       <TouchableOpacity
-        style={[styles.btn, { backgroundColor: bg, borderWidth: bw, borderColor: bc, paddingVertical: py }, disabled && styles.disabled, style]}
+        style={[styles.btn, { backgroundColor: bg, borderWidth: bw, borderColor: bc, paddingVertical: py, borderRadius: radius }, disabled && styles.disabled, style]}
         onPress={onPress} disabled={disabled || loading} activeOpacity={0.7}
       >
         {loading ? <ActivityIndicator color={tc} size="small" /> : (
@@ -35,25 +35,20 @@ export default function Button({
     );
   }
 
-  const gradColors = isSecondary ? ['#7C3AED', '#6D28D9'] : COLORS.gradient.primary;
+  const bgColor = isSecondary ? COLORS.secondary : COLORS.primary;
+  const textColor = isSecondary ? COLORS.white : COLORS.dark;
 
   return (
     <TouchableOpacity
       onPress={onPress} disabled={disabled || loading} activeOpacity={0.8}
-      style={[SHADOWS.medium, disabled && styles.disabled, style]}
+      style={[styles.btn, styles.primaryBtn, { backgroundColor: bgColor, paddingVertical: py, borderRadius: radius }, SHADOWS.medium, disabled && styles.disabled, style]}
     >
-      <LinearGradient
-        colors={gradColors}
-        start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}
-        style={[styles.btn, styles.gradBtn, { paddingVertical: py }]}
-      >
-        {loading ? <ActivityIndicator color={COLORS.white} size="small" /> : (
-          <View style={styles.inner}>
-            {icon}
-            <Text style={[styles.text, { color: COLORS.white, fontSize: fs }]}>{title}</Text>
-          </View>
-        )}
-      </LinearGradient>
+      {loading ? <ActivityIndicator color={textColor} size="small" /> : (
+        <View style={styles.inner}>
+          {icon}
+          <Text style={[styles.text, { color: textColor, fontSize: fs }]}>{title}</Text>
+        </View>
+      )}
     </TouchableOpacity>
   );
 }
@@ -65,8 +60,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingHorizontal: 24,
   },
-  gradBtn: {
-    overflow: 'hidden',
+  primaryBtn: {
+    shadowColor: COLORS.primary,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 12,
+    elevation: 4,
   },
   inner: {
     flexDirection: 'row',

@@ -8,9 +8,15 @@ export const adminApi = {
   getUsers: (p) => api.get('/admin/users', { params: p }),
   getUserById: (id) => api.get(`/admin/users/${id}`),
   updateUserStatus: (id, status) => api.put(`/admin/users/${id}/status`, { status }),
-  getOrders: (p) => api.get('/admin/orders', { params: p }),
+  getOrders: (limitOrParams, offset) => {
+    if (typeof limitOrParams === 'object') return api.get('/admin/orders', { params: limitOrParams });
+    return api.get('/admin/orders', { params: { limit: limitOrParams, offset } });
+  },
   getOrderById: (id) => api.get(`/admin/orders/${id}`),
   getOrderMessages: (id) => api.get(`/admin/orders/${id}/messages`),
-  getTransactions: (p) => api.get('/admin/transactions', { params: p }),
+  getTransactions: (limitOrParams, offset) => {
+    if (typeof limitOrParams === 'object') return api.get('/admin/transactions', { params: limitOrParams });
+    return api.get('/admin/transactions', { params: { limit: limitOrParams, offset } });
+  },
 };
 export default api;

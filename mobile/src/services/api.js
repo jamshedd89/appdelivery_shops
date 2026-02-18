@@ -58,6 +58,13 @@ export const reviewsApi = {
   getForUser: (userId) => api.get(`/reviews/user/${userId}`),
 };
 
+export const notificationsApi = {
+  getAll: (limit, offset) => api.get('/notifications', { params: { limit, offset } }),
+  getUnreadCount: () => api.get('/notifications/unread-count'),
+  markRead: (id) => api.put(`/notifications/${id}/read`),
+  markAllRead: () => api.put('/notifications/read-all'),
+};
+
 export const chatApi = {
   getMessages: (orderId) => api.get(`/chat/${orderId}/messages`),
   sendMessage: (orderId, data) => api.post(`/chat/${orderId}/messages`, data),

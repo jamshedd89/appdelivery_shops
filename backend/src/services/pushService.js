@@ -1,8 +1,11 @@
-const { User } = require('../models');
+const { User, Notification } = require('../models');
 
 class PushService {
   async sendPush(userId, title, body, data = {}) {
     try {
+      // Save to DB
+      await Notification.create({ user_id: userId, type: data.type || 'info', title, body, data });
+
       const user = await User.findByPk(userId);
       if (!user?.push_token) return;
 

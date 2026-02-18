@@ -7,4 +7,5 @@ router.use('/balance', require('./balance'));
 router.use('/reviews', require('./reviews'));
 router.use('/admin', require('./admin'));
 router.use('/chat', require('./chat'));
+router.use('/notifications', require('./notifications'));
 module.exports = router;
