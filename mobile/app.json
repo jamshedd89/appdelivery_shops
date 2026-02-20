@@ -20,6 +20,7 @@
       }
     },
     "android": {
+      "softInputMode": "adjustResize",
       "adaptiveIcon": {
         "backgroundColor": "#4A6CF7"
       },

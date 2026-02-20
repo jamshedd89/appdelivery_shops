@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../utils/constants';
@@ -7,40 +7,27 @@ export default function Input({
   label, error, style, secureTextEntry, leftIcon, containerStyle, ...props
 }) {
   const [hidden, setHidden] = useState(secureTextEntry);
-  const [focused, setFocused] = useState(false);
 
-  const handleFocus = (e) => {
-    setFocused(true);
-    props.onFocus?.(e);
-  };
-
-  const handleBlur = (e) => {
-    setFocused(false);
-    props.onBlur?.(e);
-  };
+  const toggleHidden = useCallback(() => setHidden(h => !h), []);
 
   return (
     <View style={[styles.container, style]}>
       {label && <Text style={styles.label}>{label}</Text>}
-      <View style={[
-        styles.inputWrap,
-        focused && styles.inputFocused,
-        error && styles.inputError,
-      ]}>
+      <View style={[styles.inputWrap, error && styles.inputError]}>
         {leftIcon && (
-          <Ionicons name={leftIcon} size={20} color={focused ? COLORS.primary : COLORS.textMuted} style={styles.leftIcon} />
+          <Ionicons name={leftIcon} size={20} color={COLORS.textMuted} style={styles.leftIcon} />
         )}
         <TextInput
           style={styles.input}
           placeholderTextColor={COLORS.textMuted}
           secureTextEntry={hidden}
           autoCorrect={false}
+          autoCapitalize="none"
+          underlineColorAndroid="transparent"
           {...props}
-          onFocus={handleFocus}
-          onBlur={handleBlur}
         />
         {secureTextEntry && (
-          <TouchableOpacity onPress={() => setHidden(!hidden)} style={styles.eyeBtn} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
+          <TouchableOpacity onPress={toggleHidden} style={styles.eyeBtn} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
             <Ionicons name={hidden ? 'eye-off-outline' : 'eye-outline'} size={20} color={COLORS.textMuted} />
           </TouchableOpacity>
         )}
@@ -65,15 +52,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row', alignItems: 'center',
     backgroundColor: COLORS.white, borderWidth: 1.5,
     borderColor: COLORS.border, borderRadius: 14,
-    paddingHorizontal: 16,
-    minHeight: 56,
-  },
-  inputFocused: {
-    borderColor: COLORS.primary,
-    ...Platform.select({
-      ios: { shadowColor: COLORS.primary, shadowOpacity: 0.15, shadowOffset: { width: 0, height: 0 }, shadowRadius: 6 },
-      android: { elevation: 2 },
-    }),
+    paddingHorizontal: 16, minHeight: 56,
   },
   inputError: {
     borderColor: COLORS.danger,

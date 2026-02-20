@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Alert, ScrollView, KeyboardAvoidingView, Platform, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Alert, ScrollView, Platform, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import Input from '../../components/Input';
@@ -57,8 +57,7 @@ export default function CreateOrderScreen({ navigation }) {
   };
 
   return (
-    <KeyboardAvoidingView style={styles.flex} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-      <ScrollView contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled">
+    <ScrollView style={styles.flex} contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled" keyboardDismissMode="none">
         {/* Balance card */}
         <View style={[styles.card, insufficientBalance && styles.cardDanger]}>
           <View style={styles.balanceRow}>
@@ -160,7 +159,6 @@ export default function CreateOrderScreen({ navigation }) {
 
         <Button title="Создать заявку" onPress={handleCreate} loading={loading} size="large" disabled={insufficientBalance} />
       </ScrollView>
-    </KeyboardAvoidingView>
   );
 }
 
